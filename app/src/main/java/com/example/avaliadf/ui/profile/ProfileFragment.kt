@@ -1,85 +1,142 @@
-// app/src/main/java/com/example/avaliadf/ui/profile/ProfileFragment.kt
 package com.example.avaliadf.ui.profile
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.Toast
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.avaliadf.R
+import com.example.avaliadf.data.model.UserProfile
 import com.example.avaliadf.data.repository.AuthRepository
 import com.example.avaliadf.data.repository.FirebaseAuthRepositoryImpl
 import com.example.avaliadf.databinding.FragmentProfileBinding
+import com.example.avaliadf.ui.base.BaseFragment // IMPORTAR
 
-class ProfileFragment : Fragment() {
+// 1. MUDAR A HERANÇA DA CLASSE
+class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBinding::inflate) {
 
-    private var _binding: FragmentProfileBinding? = null
-    private val binding get() = _binding!!
+    // 2. REMOVER _binding e binding
+    // private var _binding: FragmentProfileBinding? = null
+    // private val binding get() = _binding!!
 
     private lateinit var viewModel: ProfileViewModel
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentProfileBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    // 3. REMOVER onCreateView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        // 4. CHAMAR super.onViewCreated() PRIMEIRO
         super.onViewCreated(view, savedInstanceState)
 
+        // O resto da sua lógica continua intacta.
         val authRepository: AuthRepository = FirebaseAuthRepositoryImpl()
         val factory = ProfileViewModelFactory(authRepository)
         viewModel = ViewModelProvider(this, factory)[ProfileViewModel::class.java]
 
         setupToolbar()
+        setupMenu()
+        setupClickListeners()
         setupObservers()
     }
 
     private fun setupToolbar() {
         binding.toolbarProfile.setNavigationOnClickListener {
-            // Ação para o botão de voltar na toolbar
             findNavController().navigateUp()
+        }
+    }
+
+    private fun setupMenu() {
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.profile_menu, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    R.id.action_edit_profile -> {
+                        viewModel.setEditMode(true)
+                        true
+                    }
+                    else -> false
+                }
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+    }
+
+    private fun setupClickListeners() {
+        binding.fabEditPhoto.setOnClickListener {
+            Toast.makeText(context, "Funcionalidade para editar foto (a implementar).", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.buttonSaveChanges.setOnClickListener {
+            val newName = binding.editTextProfileName.text.toString()
+            val newCpf = binding.editTextProfileCPF.text.toString()
+            viewModel.saveChanges(newName, newCpf)
         }
     }
 
     private fun setupObservers() {
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             binding.progressBarProfile.isVisible = isLoading
-            binding.cardProfile.isVisible = !isLoading // Esconde o card enquanto carrega
         }
 
-        viewModel.errorMessage.observe(viewLifecycleOwner) { errorMessage ->
-            val hasError = errorMessage != null
-            binding.textViewProfileError.isVisible = hasError
-            if(hasError) {
-                binding.textViewProfileError.text = errorMessage
+        viewModel.errorMessage.observe(viewLifecycleOwner) { error ->
+            if (error != null) {
+                Toast.makeText(context, "Erro: $error", Toast.LENGTH_LONG).show()
             }
         }
 
         viewModel.userProfile.observe(viewLifecycleOwner) { profile ->
-            // Preenche os campos da UI com os dados do perfil
-            binding.textViewProfileName.text = profile.name ?: "Nome não disponível"
-            binding.textViewProfileEmail.text = profile.email ?: "E-mail não disponível"
-            binding.textViewProfileCPF.text = "CPF: ${profile.cpf ?: "Não disponível"}"
+            profile?.let { bindProfileData(it) }
+        }
 
-            // Carrega a imagem de perfil (se houver uma URL) ou mostra o placeholder
-            Glide.with(this)
-                .load(profile.photoUrl) // Irá carregar a URL da foto no futuro
-                .placeholder(R.drawable.ic_user_profile_placeholder) // O placeholder que já criamos
-                .error(R.drawable.ic_user_profile_placeholder) // Imagem de erro
-                .circleCrop() // Deixa a imagem redonda
-                .into(binding.imageViewProfile)
+        viewModel.isEditing.observe(viewLifecycleOwner) { isEditing ->
+            toggleEditMode(isEditing)
+        }
+
+        viewModel.updateSuccess.observe(viewLifecycleOwner) { success ->
+            if (success) {
+                Toast.makeText(context, "Perfil atualizado com sucesso!", Toast.LENGTH_SHORT).show()
+                viewModel.setEditMode(false)
+            }
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    private fun bindProfileData(profile: UserProfile) {
+        binding.editTextProfileName.setText(profile.name)
+        binding.editTextProfileEmail.setText(profile.email)
+        binding.editTextProfileCPF.setText(profile.cpf ?: "")
+        binding.textViewAvaliacoins.text = "${profile.avaliacoins} AvaliaCoins"
+
+        Glide.with(this)
+            .load(profile.photoUrl)
+            .placeholder(R.drawable.ic_profile) // Usar um placeholder adequado
+            .error(R.drawable.ic_profile)       // Usar um placeholder adequado
+            .circleCrop()
+            .into(binding.imageViewProfile)
     }
+
+    private fun toggleEditMode(isEditing: Boolean) {
+        binding.editTextProfileName.isEnabled = isEditing
+        binding.editTextProfileCPF.isEnabled = isEditing
+        binding.buttonSaveChanges.isVisible = isEditing
+        binding.fabEditPhoto.isVisible = isEditing
+
+        val context = requireContext()
+        val inputBackgroundColor = if (isEditing) {
+            androidx.core.content.ContextCompat.getColor(context, R.color.white)
+        } else {
+            // Usar uma cor que indique que o campo não é editável
+            androidx.core.content.ContextCompat.getColor(context, R.color.black)
+        }
+        binding.editTextProfileName.setBackgroundColor(inputBackgroundColor)
+        binding.editTextProfileCPF.setBackgroundColor(inputBackgroundColor)
+    }
+
+    // 5. REMOVER onDestroyView
 }

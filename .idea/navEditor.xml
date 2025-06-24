@@ -8,23 +8,6 @@
             <LayoutPositions>
               <option name="myPositions">
                 <map>
-                  <entry key="action_global_homeFragment">
-                    <value>
-                      <LayoutPositions />
-                    </value>
-                  </entry>
-                  <entry key="addEstablishmentFragment">
-                    <value>
-                      <LayoutPositions>
-                        <option name="myPosition">
-                          <Point>
-                            <option name="x" value="12" />
-                            <option name="y" value="12" />
-                          </Point>
-                        </option>
-                      </LayoutPositions>
-                    </value>
-                  </entry>
                   <entry key="establishmentDetailFragment">
                     <value>
                       <LayoutPositions>
@@ -33,15 +16,6 @@
                             <option name="x" value="988" />
                             <option name="y" value="453" />
                           </Point>
-                        </option>
-                        <option name="myPositions">
-                          <map>
-                            <entry key="action_establishmentDetailFragment_to_reviewFragment">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
-                          </map>
                         </option>
                       </LayoutPositions>
                     </value>
@@ -57,29 +31,17 @@
                         </option>
                         <option name="myPositions">
                           <map>
-                            <entry key="action_establishmentListFragment_to_addEstablishmentFragment">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
                             <entry key="action_establishmentListFragment_to_establishmentDetailFragment">
                               <value>
                                 <LayoutPositions />
                               </value>
                             </entry>
+                            <entry key="action_establishmentListFragment_to_reviewFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
                           </map>
-                        </option>
-                      </LayoutPositions>
-                    </value>
-                  </entry>
-                  <entry key="forgotPasswordFragment">
-                    <value>
-                      <LayoutPositions>
-                        <option name="myPosition">
-                          <Point>
-                            <option name="x" value="12" />
-                            <option name="y" value="12" />
-                          </Point>
                         </option>
                       </LayoutPositions>
                     </value>
@@ -95,11 +57,6 @@
                         </option>
                         <option name="myPositions">
                           <map>
-                            <entry key="action_homeFragment_to_addEstablishmentFragment">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
                             <entry key="action_homeFragment_to_establishmentListFragment">
                               <value>
                                 <LayoutPositions />
@@ -131,11 +88,6 @@
                         </option>
                         <option name="myPositions">
                           <map>
-                            <entry key="action_loginFragment_to_forgotPasswordFragment">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
                             <entry key="action_loginFragment_to_homeFragment">
                               <value>
                                 <LayoutPositions />
@@ -191,18 +143,6 @@
                           <Point>
                             <option name="x" value="988" />
                             <option name="y" value="97" />
-                          </Point>
-                        </option>
-                      </LayoutPositions>
-                    </value>
-                  </entry>
-                  <entry key="settingsFragment">
-                    <value>
-                      <LayoutPositions>
-                        <option name="myPosition">
-                          <Point>
-                            <option name="x" value="12" />
-                            <option name="y" value="12" />
                           </Point>
                         </option>
                       </LayoutPositions>

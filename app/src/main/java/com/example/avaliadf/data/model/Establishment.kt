@@ -1,8 +1,6 @@
-// app/src/main/java/com/example/avaliadf/data/model/Restaurante.kt
+
 package com.example.avaliadf.data.model
 
-// Usaremos @Parcelize para poder passar o objeto entre fragments, se necessário.
-// Adicione o plugin 'kotlin-parcelize' no seu build.gradle se ainda não tiver.
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
@@ -13,8 +11,17 @@ data class Establishment(
     val imageUrl: String? = null,
     val hours: String? = null,
     val phone: String? = null,
-    val rating: Double? = 0.0, // Usar Double para a nota
+    val rating: Double? = 0.0,
     val mapLink: String? = null,
-    val city: String = "", // Usado para o filtro
-    val category: String = "" // Para garantir que estamos pegando a categoria certa
+
+    // --- CAMPOS CORRIGIDOS E ADICIONADOS ---
+    val city: String = "", // Este campo deve corresponder ao 'city' em seu Firebase
+    val cityId: String = "", // Adicionado para corresponder ao 'cityId' em seu Firebase
+    val category: String = "",
+    val address: String = "" ,
+
+    val reviewCount: Int = 0,
+
+    val description: String? = null
+
 ) : Parcelable

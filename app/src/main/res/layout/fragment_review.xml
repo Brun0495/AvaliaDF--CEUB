@@ -16,105 +16,92 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:navigationIcon="@drawable/ic_arrow_back"
-            app:title="Avaliar Local" />
-
+            app:title="Deixar Avaliação" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <ScrollView
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:fillViewport="true">
+        android:animateLayoutChanges="true">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
+            android:id="@+id/formContainer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
             android:padding="16dp">
 
             <TextView
-                android:id="@+id/textViewLabelAvaliando"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Você está avaliando:"
-                android:textAppearance="?attr/textAppearanceBody2"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"/>
-
-            <TextView
                 android:id="@+id/textViewEstablishmentName"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                tools:text="Nome do Restaurante de Teste"
+                tools:text="Avaliar: Coco Bambu"
                 android:textAppearance="?attr/textAppearanceHeadline6"
-                app:layout_constraintTop_toBottomOf="@id/textViewLabelAvaliando"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="16dp"/>
 
-            <TextView
-                android:id="@+id/textViewLabelNota"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/step1"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Sua nota:"
-                android:layout_marginTop="24dp"
-                android:textAppearance="?attr/textAppearanceBody1"
-                app:layout_constraintTop_toBottomOf="@id/textViewEstablishmentName"
-                app:layout_constraintStart_toStartOf="parent"/>
-
-            <RatingBar
-                android:id="@+id/ratingBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:numStars="5"
-                android:stepSize="0.5"
-                app:layout_constraintTop_toBottomOf="@id/textViewLabelNota"
-                app:layout_constraintStart_toStartOf="parent" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textInputLayoutComment"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:hint="Deixe um comentário (opcional)"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                app:layout_constraintTop_toBottomOf="@id/ratingBar"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editTextComment"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="top"
-                    android:minLines="4"/>
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-
-            <Button
-                android:id="@+id/buttonSubmitReview"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="Enviar Avaliação"
-                android:padding="12dp"
-                android:layout_marginTop="24dp"
-                app:layout_constraintTop_toBottomOf="@id/textInputLayoutComment"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
-
-            <ProgressBar
-                android:id="@+id/progressBarReview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:visibility="gone"
-                tools:visibility="visible"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                tools:visibility="visible">
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="1/4: Qual sua nota para o local?" android:textAppearance="?attr/textAppearanceSubtitle1"/>
+                <RatingBar android:id="@+id/ratingBarGeneral" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center_horizontal" android:numStars="5" android:stepSize="1.0"/>
+                <com.google.android.material.textfield.TextInputLayout android:id="@+id/textInputLayoutComment" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:hint="Deixe um comentário (opcional)">
+                    <com.google.android.material.textfield.TextInputEditText android:id="@+id/editTextComment" android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="top" android:minLines="3"/>
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
 
-    </ScrollView>
+            <LinearLayout android:id="@+id/step2" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:visibility="gone">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="2/4: De 0 a 10, qual a chance de você recomendar este local?" android:textAppearance="?attr/textAppearanceSubtitle1"/>
+                <Spinner android:id="@+id/spinnerRecommendation" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp"/>
+            </LinearLayout>
 
+            <LinearLayout android:id="@+id/step3" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:visibility="gone">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="3/4: Dê uma nota para o atendimento (1 a 10)" android:textAppearance="?attr/textAppearanceSubtitle1"/>
+                <Spinner android:id="@+id/spinnerService" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp"/>
+            </LinearLayout>
+
+            <LinearLayout android:id="@+id/step4" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:visibility="gone">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="4/4: Qual a chance de você voltar? (1 a 5)" android:textAppearance="?attr/textAppearanceSubtitle1"/>
+                <Spinner android:id="@+id/spinnerReturnChance" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp"/>
+            </LinearLayout>
+
+            <View android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1"/> <Button
+            android:id="@+id/buttonNextSubmit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Próxima"
+            android:padding="12dp"
+            android:layout_marginTop="24dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/thankYouContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="16dp"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Obrigado pela sua avaliação!" android:textAppearance="?attr/textAppearanceHeadline5" android:textStyle="bold" android:gravity="center"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Você ganhou 50 AvaliaCoins!" android:layout_marginTop="16dp" android:textAppearance="?attr/textAppearanceHeadline6" android:textColor="?attr/colorPrimary"/>
+            <Button android:id="@+id/buttonBackToHome" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Voltar para o Início" android:layout_marginTop="32dp"/>
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/progressBarReview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"/>
+
+    </FrameLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

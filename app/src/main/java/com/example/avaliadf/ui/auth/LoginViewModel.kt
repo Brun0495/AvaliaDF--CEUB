@@ -21,19 +21,26 @@ class LoginViewModel(private val authRepository: AuthRepository) : ViewModel() {
     val authResultLiveData: LiveData<AuthResult> = authRepository.authResultLiveData
 
     // Função para iniciar o login
-    fun signIn(email: String, pass: String) {
+    fun signIn(email: String, password: String) {
+        // Validação para campos em branco
+        if (email.isBlank() || password.isBlank()) {
+            // O repositório já lida com isso, mas é uma boa prática validar aqui também.
+            return
+        }
+
+        // Inicia o processo e desativa o botão
+        _isLoading.value = true
+
         viewModelScope.launch {
-            _isLoading.value = true // Agora _isLoading existe
-            authRepository.signIn(email, pass)
-            // O resultado será observado através de authResultLiveData.
-            // O repositório postará o resultado, e o Fragment observará.
-            // O _isLoading pode ser resetado no Fragment ao observar o resultado,
-            // ou aqui se signIn no repositório fosse uma suspend fun que retorna o resultado.
-            // Por simplicidade, vamos deixar o Fragment controlar o isLoading ao receber o resultado.
-            // No entanto, é uma boa prática o ViewModel controlar seu próprio estado de loading.
-            // A linha abaixo pode ser prematura se o signIn for rápido e o fragment não tiver tempo de reagir.
-            // Vamos comentar por agora e deixar o Fragment controlar ao receber o AuthResult.
-            // _isLoading.value = false
+            try {
+                authRepository.signIn(email, password)
+                // Se o login for bem-sucedido, o observer do authResult no Fragment fará a navegação.
+            } finally {
+                // --- CORREÇÃO AQUI ---
+                // O bloco 'finally' é executado SEMPRE, independentemente de sucesso ou erro.
+                // Garantimos que o botão será reativado em qualquer cenário.
+                _isLoading.postValue(false)
+            }
         }
     }
 }

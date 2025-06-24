@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:layout_marginBottom="8dp">
+
+    <LinearLayout
+        android:id="@+id/starsContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView android:id="@+id/star1" android:src="@drawable/star_selector" style="@style/ReviewStar" />
+        <ImageView android:id="@+id/star2" android:src="@drawable/star_selector" style="@style/ReviewStar" />
+        <ImageView android:id="@+id/star3" android:src="@drawable/star_selector" style="@style/ReviewStar" />
+        <ImageView android:id="@+id/star4" android:src="@drawable/star_selector" style="@style/ReviewStar" />
+        <ImageView android:id="@+id/star5" android:src="@drawable/star_selector" style="@style/ReviewStar" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textViewComment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textAppearance="?attr/textAppearanceBody2"
+        tools:text="Comentário." />
+
+    <TextView
+        android:id="@+id/textViewUserAndDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textAppearance="?attr/textAppearanceCaption"
+        tools:text="por Usuário - 21/06/2025"/>
+
+</LinearLayout>

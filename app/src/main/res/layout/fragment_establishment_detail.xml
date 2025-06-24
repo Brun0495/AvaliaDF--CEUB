@@ -82,6 +82,15 @@
                 app:drawableStartCompat="@drawable/ic_star"
                 tools:text="4.8" />
 
+            <TextView
+                android:id="@+id/textViewDetailDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:textAppearance="?attr/textAppearanceBody1"
+                tools:text="Esta é uma descrição detalhada do estabelecimento, falando sobre o ambiente, os pratos principais e por que este é um ótimo lugar para visitar." />
+
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -114,7 +123,40 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Avaliar este Local"/>
+                android:text="Avaliar este Local" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="16dp"
+                android:background="?attr/dividerHorizontal"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="O que as pessoas estão dizendo"
+                android:textAppearance="?attr/textAppearanceTitleMedium"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/textViewNoReviews"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ainda não há avaliações. Seja o primeiro!"
+                android:layout_marginTop="8dp"
+                android:visibility="gone"
+                tools:visibility="visible"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewReviews"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:nestedScrollingEnabled="false"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_review"
+                tools:itemCount="3"/>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

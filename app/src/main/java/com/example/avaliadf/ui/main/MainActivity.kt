@@ -1,51 +1,58 @@
-// Dentro de ui/main/MainActivity.kt
 package com.example.avaliadf.ui.main
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.setupActionBarWithNavController // Se você for usar ActionBar
 import com.example.avaliadf.R
-import com.example.avaliadf.databinding.ActivityMainBinding // Importe o ViewBinding gerado
+import com.example.avaliadf.databinding.ActivityMainBinding
+import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity() {
 
-    private val mainViewModel: MainViewModel by viewModels()
-    private lateinit var binding: ActivityMainBinding // Variável para o ViewBinding
+
+    private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+        // A splash screen deve ser a PRIMEIRA coisa a ser chamada.
+        installSplashScreen()
+
         enableEdgeToEdge()
+        super.onCreate(savedInstanceState)
 
-        // Inflar o layout usando ViewBinding
+        // Vamos remover o enableEdgeToEdge por enquanto,
+        // pois ele pode interferir na transição da splash screen.
+
+
         binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root) // Use binding.root
+        setContentView(binding.root)
 
-        // Configurar o NavController
+        // Chamamos a nova função que configura a navegação e o destino inicial.
+        setupNavigation()
+    }
+
+    private fun setupNavigation() {
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
 
-        // Exemplo: Se você tiver uma ActionBar e quiser que o título mude com a navegação
-        // setupActionBarWithNavController(navController)
+        // Pega o grafo de navegação
+        val navGraph = navController.navInflater.inflate(R.navigation.nav_graph)
 
-        // Ajustar o padding para o conteúdo dentro do FragmentContainerView (agora no root do binding)
-        ViewCompat.setOnApplyWindowInsetsListener(binding.mainContainer) { v, insets -> // Use o ID do root layout
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            // Ajuste o padding do container principal, os fragments internos cuidarão de seus próprios paddings se necessário
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+        // --- LÓGICA DE DIRECIONAMENTO ---
+        // Verifica se há um usuário logado no Firebase
+        if (FirebaseAuth.getInstance().currentUser != null) {
+            // Se SIM, a tela inicial do grafo será a Home
+            navGraph.setStartDestination(R.id.homeFragment)
+        } else {
+            // Se NÃO, a tela inicial do grafo será o Login
+            navGraph.setStartDestination(R.id.loginFragment)
         }
-    }
 
-    // Se você usar setupActionBarWithNavController, precisa dar override neste método
-    // override fun onSupportNavigateUp(): Boolean {
-    //     return navController.navigateUp() || super.onSupportNavigateUp()
-    // }
+        // Define o grafo modificado no NavController
+        navController.graph = navGraph
+    }
 }

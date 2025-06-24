@@ -1,40 +1,71 @@
 package com.example.avaliadf.ui.establishments
+
 import androidx.lifecycle.*
+import com.example.avaliadf.data.model.City
 import com.example.avaliadf.data.model.Establishment
+import com.example.avaliadf.data.repository.CityRepository
 import com.example.avaliadf.data.repository.EstablishmentRepository
 import com.example.avaliadf.data.util.ResultWrapper
+import com.example.avaliadf.data.util.UIState
 import kotlinx.coroutines.launch
 
 class EstablishmentListViewModel(
-    private val establishmentRepository: EstablishmentRepository
+    private val establishmentRepository: EstablishmentRepository,
+    private val cityRepository: CityRepository
 ) : ViewModel() {
-    private val _establishmentsList = MutableLiveData<List<Establishment>>()
-    val establishmentsList: LiveData<List<Establishment>> = _establishmentsList
-    private val _isLoading = MutableLiveData<Boolean>()
-    val isLoading: LiveData<Boolean> = _isLoading
-    private val _errorMessage = MutableLiveData<String?>()
-    val errorMessage: LiveData<String?> = _errorMessage
+
     private val _screenTitle = MutableLiveData<String>()
     val screenTitle: LiveData<String> = _screenTitle
 
-    fun loadEstablishments(filterType: String, filterValue: String) {
-        _screenTitle.value = filterValue.replaceFirstChar { it.uppercase() }
-        _isLoading.value = true
-        _errorMessage.value = null
+    private val _citiesList = MutableLiveData<List<City>>()
+    val citiesList: LiveData<List<City>> = _citiesList
+
+    // --- MUDANÇA PRINCIPAL: UM ÚNICO LIVEDATA PARA O ESTADO DA TELA ---
+    private val _uiState = MutableLiveData<UIState<List<Establishment>>>()
+    val uiState: LiveData<UIState<List<Establishment>>> = _uiState
+
+    private var primaryFilterCategory: String? = null
+
+    init {
+        loadCities()
+    }
+
+    private fun loadCities() {
         viewModelScope.launch {
-            when (val result = establishmentRepository.getEstablishments(filterType, filterValue)) {
+            _citiesList.postValue(cityRepository.getCities())
+        }
+    }
+
+    fun initialLoad(filterType: String, filterValue: String) {
+        if (filterType == "category") {
+            primaryFilterCategory = filterValue
+            _screenTitle.value = filterValue.replaceFirstChar { it.uppercase() }
+            fetchEstablishments(category = primaryFilterCategory, cityId = null)
+        } else { // filterType == "cityId"
+            _screenTitle.value = "Estabelecimentos"
+            fetchEstablishments(category = null, cityId = filterValue)
+        }
+    }
+
+    fun onCityFilterChanged(cityId: String?) {
+        fetchEstablishments(category = primaryFilterCategory, cityId = cityId)
+    }
+
+    private fun fetchEstablishments(category: String?, cityId: String?) {
+        _uiState.value = UIState.Loading // 1. Emite o estado de Carregando
+        viewModelScope.launch {
+            when (val result = establishmentRepository.getEstablishments(category, cityId)) {
                 is ResultWrapper.Success -> {
                     if (result.data.isEmpty()) {
-                        _errorMessage.postValue("Nenhum local encontrado.")
+                        _uiState.postValue(UIState.Empty) // 2. Emite o estado de Vazio
+                    } else {
+                        _uiState.postValue(UIState.Success(result.data)) // 3. Emite o estado de Sucesso
                     }
-                    _establishmentsList.postValue(result.data)
                 }
                 is ResultWrapper.Error -> {
-                    _errorMessage.postValue(result.message)
-                    _establishmentsList.postValue(emptyList())
+                    _uiState.postValue(UIState.Error(result.message ?: "Erro desconhecido")) // 4. Emite o estado de Erro
                 }
             }
-            _isLoading.postValue(false)
         }
     }
 }

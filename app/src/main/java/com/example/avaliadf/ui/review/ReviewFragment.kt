@@ -1,91 +1,147 @@
-// app/src/main/java/com/example/avaliadf/ui/review/ReviewFragment.kt
 package com.example.avaliadf.ui.review
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.example.avaliadf.R
 import com.example.avaliadf.data.repository.AuthRepository
 import com.example.avaliadf.data.repository.EstablishmentRepository
 import com.example.avaliadf.data.repository.FirebaseAuthRepositoryImpl
-import com.example.avaliadf.data.repository.LocalEstablishmentRepositoryImpl
+import com.example.avaliadf.data.repository.FirestoreEstablishmentRepositoryImpl
 import com.example.avaliadf.data.util.ResultWrapper
 import com.example.avaliadf.databinding.FragmentReviewBinding
+import com.example.avaliadf.ui.base.BaseFragment // IMPORTAR
 
-class ReviewFragment : Fragment() {
+// 1. MUDAR A HERANÇA DA CLASSE
+class ReviewFragment : BaseFragment<FragmentReviewBinding>(FragmentReviewBinding::inflate) {
 
-    private var _binding: FragmentReviewBinding? = null
-    private val binding get() = _binding!!
+    // 2. REMOVER _binding e binding
+    // private var _binding: FragmentReviewBinding? = null
+    // private val binding get() = _binding!!
 
     private lateinit var viewModel: ReviewViewModel
     private val args: ReviewFragmentArgs by navArgs()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentReviewBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    // Variáveis para guardar as respostas de cada etapa
+    private var generalRating: Float = 0f
+    private var comment: String = ""
+    private var recommendationScore: Int = -1
+    private var serviceRating: Int = -1
+    private var returnChance: Int = -1
+
+    // 3. REMOVER onCreateView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        // 4. CHAMAR super.onViewCreated() PRIMEIRO
         super.onViewCreated(view, savedInstanceState)
 
-        // Para o protótipo, usamos os repositórios locais e de autenticação real
-        val establishmentRepository: EstablishmentRepository = LocalEstablishmentRepositoryImpl()
+        // O resto da sua lógica continua intacta.
+        val establishmentRepository: EstablishmentRepository = FirestoreEstablishmentRepositoryImpl()
         val authRepository: AuthRepository = FirebaseAuthRepositoryImpl()
         val factory = ReviewViewModelFactory(establishmentRepository, authRepository)
         viewModel = ViewModelProvider(this, factory)[ReviewViewModel::class.java]
 
         setupToolbar()
+        setupSpinners()
         setupClickListeners()
         setupObservers()
 
-        // Pede ao ViewModel para carregar os detalhes usando o ID recebido da navegação
         viewModel.loadEstablishmentDetails(args.establishmentId)
     }
 
     private fun setupToolbar() {
         binding.toolbarReview.setNavigationOnClickListener {
-            findNavController().navigateUp() // Ação de voltar
+            findNavController().navigateUp()
         }
     }
 
+    private fun setupSpinners() {
+        binding.spinnerRecommendation.adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, (0..10).map { it.toString() })
+        binding.spinnerService.adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, (1..10).map { it.toString() })
+        binding.spinnerReturnChance.adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, (1..5).map { it.toString() })
+    }
+
     private fun setupClickListeners() {
-        binding.buttonSubmitReview.setOnClickListener {
-            val rating = binding.ratingBar.rating
-            val comment = binding.editTextComment.text.toString()
-            viewModel.submitReview(args.establishmentId, rating, comment)
+        binding.buttonNextSubmit.setOnClickListener {
+            handleNextSubmitClick()
+        }
+        binding.buttonBackToHome.setOnClickListener {
+            findNavController().navigate(R.id.action_global_homeFragment)
+        }
+    }
+
+    private fun handleNextSubmitClick() {
+        val currentStep = viewModel.currentStep.value ?: 1
+        if (!validateStep(currentStep)) return
+
+        saveStepData(currentStep)
+
+        if (currentStep < 4) {
+            viewModel.nextStep()
+        } else {
+            viewModel.submitFullReview(
+                establishmentId = args.establishmentId,
+                rating = generalRating,
+                comment = comment,
+                recommendationScore = recommendationScore,
+                serviceRating = serviceRating,
+                returnChance = returnChance
+            )
+        }
+    }
+
+    private fun validateStep(step: Int): Boolean {
+        return when (step) {
+            1 -> {
+                if (binding.ratingBarGeneral.rating == 0f) {
+                    Toast.makeText(context, "Por favor, selecione uma nota.", Toast.LENGTH_SHORT).show()
+                    false
+                } else true
+            }
+            else -> true // Simplificado para as outras etapas
+        }
+    }
+
+    private fun saveStepData(step: Int) {
+        when (step) {
+            1 -> {
+                generalRating = binding.ratingBarGeneral.rating
+                comment = binding.editTextComment.text.toString()
+            }
+            2 -> recommendationScore = binding.spinnerRecommendation.selectedItem.toString().toInt()
+            3 -> serviceRating = binding.spinnerService.selectedItem.toString().toInt()
+            4 -> returnChance = binding.spinnerReturnChance.selectedItem.toString().toInt()
         }
     }
 
     private fun setupObservers() {
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             binding.progressBarReview.isVisible = isLoading
-            binding.buttonSubmitReview.isEnabled = !isLoading
         }
 
-        // Observa o estabelecimento carregado para mostrar o nome
+        viewModel.currentStep.observe(viewLifecycleOwner) { step ->
+            binding.step1.isVisible = step == 1
+            binding.step2.isVisible = step == 2
+            binding.step3.isVisible = step == 3
+            binding.step4.isVisible = step == 4
+
+            binding.buttonNextSubmit.text = if (step == 4) "Enviar Avaliação" else "Próxima"
+        }
+
         viewModel.establishment.observe(viewLifecycleOwner) { establishment ->
-            if (establishment != null) {
-                binding.textViewEstablishmentName.text = establishment.name
-            } else {
-                binding.textViewEstablishmentName.text = "Local não encontrado"
-            }
+            binding.textViewEstablishmentName.text = "Avaliar: ${establishment?.name ?: "Local"}"
         }
 
-        // Observa o resultado do envio da avaliação
         viewModel.reviewSubmissionState.observe(viewLifecycleOwner) { result ->
             when (result) {
                 is ResultWrapper.Success -> {
-                    Toast.makeText(context, "Obrigado pela sua avaliação!", Toast.LENGTH_LONG).show()
-                    findNavController().popBackStack() // Volta para a tela anterior
+                    binding.formContainer.isVisible = false
+                    binding.thankYouContainer.isVisible = true
                 }
                 is ResultWrapper.Error -> {
                     Toast.makeText(context, "Erro: ${result.message}", Toast.LENGTH_LONG).show()
@@ -94,8 +150,5 @@ class ReviewFragment : Fragment() {
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
+    // 5. REMOVER onDestroyView
 }

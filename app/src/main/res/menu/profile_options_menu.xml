@@ -7,9 +7,6 @@
         android:id="@+id/option_settings"
         android:title="Configurações" />
     <item
-        android:id="@+id/option_my_avaliacoins"
-        android:title="Meus AvaliaCoins" />
-    <item
         android:id="@+id/option_logout"
         android:title="Sair" />
 </menu>

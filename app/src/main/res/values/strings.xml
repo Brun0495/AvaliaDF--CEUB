@@ -6,4 +6,7 @@
         <item>Sim</item>
         <item>Não</item>
     </string-array>
+
+    <string name="establishment_image_description">Imagem do estabelecimento</string>
+    <string name="rating_star_icon_description">Ícone de estrela da avaliação</string>
 </resources>

@@ -10,13 +10,12 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbarRestaurantes"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:navigationIcon="@drawable/ic_arrow_back"
-            app:title="Restaurantes" />
+            tools:title="Restaurantes" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <LinearLayout
@@ -27,6 +26,7 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <TextView
+            android:id="@+id/textViewFilterLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Filtrar por cidade:"
@@ -38,8 +38,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="8dp"
-            android:padding="8dp"
-            android:background="@drawable/spinner_background" />
+            android:background="@drawable/spinner_background"
+            android:padding="8dp"/>
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -49,8 +49,33 @@
                 android:id="@+id/recyclerViewRestaurantes"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:visibility="gone"
+                tools:visibility="visible"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/item_establishment" />
+
+            <LinearLayout
+                android:id="@+id/emptyStateContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_gravity="center"
+                android:gravity="center_horizontal"
+                android:visibility="gone"
+                tools:visibility="visible">
+                <TextView
+                    android:id="@+id/textViewError"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Nenhum local encontrado para esta seleção."
+                    android:textAppearance="?attr/textAppearanceBodyLarge" />
+                <Button
+                    android:id="@+id/buttonAddEstablishment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Seja o primeiro a cadastrar!"/>
+            </LinearLayout>
 
             <ProgressBar
                 android:id="@+id/progressBar"
@@ -58,14 +83,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:visibility="gone" />
-
-            <TextView
-                android:id="@+id/textViewError"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:visibility="gone"
-                tools:text="Nenhum restaurante encontrado."/>
         </FrameLayout>
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

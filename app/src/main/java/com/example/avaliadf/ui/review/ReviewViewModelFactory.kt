@@ -1,4 +1,3 @@
-// app/src/main/java/com/example/avaliadf/ui/review/ReviewViewModelFactory.kt
 package com.example.avaliadf.ui.review
 
 import androidx.lifecycle.ViewModel

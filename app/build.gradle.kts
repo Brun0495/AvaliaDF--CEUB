@@ -81,4 +81,6 @@ dependencies {
     implementation("androidx.navigation:navigation-ui-ktx:$navVersion")
 
     implementation("com.github.bumptech.glide:glide:4.16.0")
+
+    implementation("androidx.core:core-splashscreen:1.0.1")
 }

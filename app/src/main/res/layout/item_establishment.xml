@@ -1,115 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="4dp">
+    android:layout_margin="8dp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="4dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <ImageView
-            android:id="@+id/imageViewRestaurante"
-            android:layout_width="0dp"
-            android:layout_height="200dp"
-            android:scaleType="centerCrop"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:src="@tools:sample/backgrounds/scenic" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/textViewNomeRestaurante"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:textAppearance="?attr/textAppearanceHeadline6"
-            app:layout_constraintTop_toBottomOf="@id/imageViewRestaurante"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:text="Nome do Restaurante" />
+            <ImageView
+                android:id="@+id/imageViewRestaurante"
+                android:layout_width="0dp"
+                android:layout_height="150dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
-        <TextView
-            android:id="@+id/textViewHorario"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:drawablePadding="8dp"
-            app:drawableStartCompat="@drawable/ic_time"
-            app:layout_constraintTop_toBottomOf="@id/textViewNomeRestaurante"
-            app:layout_constraintStart_toStartOf="@id/textViewNomeRestaurante"
-            app:layout_constraintEnd_toEndOf="@id/textViewNomeRestaurante"
-            tools:text="Horário: 08:00 - 22:00" />
-
-        <TextView
-            android:id="@+id/textViewTelefone"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:drawablePadding="8dp"
-            app:drawableStartCompat="@drawable/ic_phone"
-            app:layout_constraintTop_toBottomOf="@id/textViewHorario"
-            app:layout_constraintStart_toStartOf="@id/textViewNomeRestaurante"
-            app:layout_constraintEnd_toEndOf="@id/textViewNomeRestaurante"
-            tools:text="Telefone: (61) 99999-9999" />
-
-        <TextView
-            android:id="@+id/textViewAvaliacao"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:drawablePadding="8dp"
-            android:gravity="center_vertical"
-            app:drawableStartCompat="@drawable/ic_star"
-            app:layout_constraintTop_toBottomOf="@id/textViewTelefone"
-            app:layout_constraintStart_toStartOf="@id/textViewNomeRestaurante"
-            app:layout_constraintEnd_toEndOf="@id/textViewNomeRestaurante"
-            tools:text="4.5" />
-
-        <LinearLayout
-            android:id="@+id/layoutBotoes"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
-            app:layout_constraintTop_toBottomOf="@id/textViewAvaliacao"
-            app:layout_constraintStart_toStartOf="@id/textViewNomeRestaurante"
-            app:layout_constraintEnd_toEndOf="@id/textViewNomeRestaurante"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:weightSum="3">
-
-            <Button
-                android:id="@+id/buttonLigar"
-                style="?attr/materialButtonOutlinedStyle"
+            <TextView
+                android:id="@+id/textViewNomeRestaurante"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Ligar"
-                android:layout_marginEnd="4dp"/>
-            <Button
-                android:id="@+id/buttonVerRota"
-                style="?attr/materialButtonOutlinedStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Rota"
-                android:layout_marginEnd="4dp"
-                android:layout_marginStart="4dp"/>
-            <Button
-                android:id="@+id/buttonAvaliar"
-                style="@style/Widget.Material3.Button"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Avaliar"
-                android:layout_marginStart="4dp"/>
-        </LinearLayout>
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@id/textViewAvaliacao"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/imageViewRestaurante"
+                tools:text="Nome do Restaurante" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</com.google.android.material.card.MaterialCardView>
+            <TextView
+                android:id="@+id/textViewAvaliacao"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:drawablePadding="4dp"
+                android:gravity="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textStyle="bold"
+                app:drawableStartCompat="@drawable/ic_star"
+                app:layout_constraintBottom_toBottomOf="@id/textViewNomeRestaurante"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/textViewNomeRestaurante"
+                tools:text="4.8" />
+
+            <TextView
+                android:id="@+id/textViewAddress"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textAppearance="?attr/textAppearanceBody2"
+                app:layout_constraintStart_toStartOf="@id/textViewNomeRestaurante"
+                app:layout_constraintEnd_toEndOf="@id/textViewNomeRestaurante"
+                app:layout_constraintTop_toBottomOf="@id/textViewNomeRestaurante"
+                tools:text="SCS Quadra 7 Bloco A - Asa Sul" />
+
+            <TextView
+                android:id="@+id/textViewHorario"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textAppearance="?attr/textAppearanceBody2"
+                app:layout_constraintStart_toStartOf="@id/textViewAddress"
+                app:layout_constraintTop_toBottomOf="@id/textViewAddress"
+                tools:text="Horário: 08:00 - 22:00" />
+
+            <TextView
+                android:id="@+id/textViewTelefone"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textAppearance="?attr/textAppearanceBody2"
+                app:layout_constraintStart_toStartOf="@id/textViewHorario"
+                app:layout_constraintTop_toBottomOf="@id/textViewHorario"
+                tools:text="Telefone: (61) 9999-9999" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintStart_toStartOf="@id/textViewTelefone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textViewTelefone"
+                app:layout_constraintBottom_toBottomOf="parent">
+
+                <Button
+                    android:id="@+id/buttonLigar"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:text="Ligar" />
+
+                <Button
+                    android:id="@+id/buttonVerRota"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:text="Ver Rota" />
+
+                <Button
+                    android:id="@+id/buttonAvaliar"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Avaliar" />
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -21,6 +21,14 @@ class ProfileViewModel(private val authRepository: AuthRepository) : ViewModel()
     private val _errorMessage = MutableLiveData<String?>()
     val errorMessage: LiveData<String?> = _errorMessage
 
+    // --- NOVOS LIVEDATAS PARA CONTROLE DA EDIÇÃO ---
+    private val _isEditing = MutableLiveData<Boolean>(false)
+    val isEditing: LiveData<Boolean> = _isEditing
+
+    private val _updateSuccess = MutableLiveData<Boolean>(false)
+    val updateSuccess: LiveData<Boolean> = _updateSuccess
+    // ---
+
     init {
         loadUserProfile()
     }
@@ -32,6 +40,47 @@ class ProfileViewModel(private val authRepository: AuthRepository) : ViewModel()
             when (val result = authRepository.getUserProfile()) {
                 is ResultWrapper.Success -> {
                     _userProfile.postValue(result.data)
+                }
+                is ResultWrapper.Error -> {
+                    _errorMessage.postValue(result.message)
+                }
+            }
+            _isLoading.postValue(false)
+        }
+    }
+
+    // --- NOVAS FUNÇÕES PARA O MODO DE EDIÇÃO ---
+
+    /** Ativa ou desativa o modo de edição na tela. */
+    fun setEditMode(isEditing: Boolean) {
+        _isEditing.value = isEditing
+    }
+
+    /** Salva as alterações feitas no perfil do usuário. */
+    fun saveChanges(newName: String, newCpf: String) {
+        val currentProfile = _userProfile.value ?: return
+
+        if (newName.isBlank()) {
+            _errorMessage.value = "O nome não pode ficar em branco."
+            return
+        }
+
+        _isLoading.value = true
+        _errorMessage.value = null
+
+        viewModelScope.launch {
+            val result = authRepository.updateUserProfile(
+                userId = currentProfile.uid,
+                newName = newName,
+                newCpf = newCpf.ifBlank { null } // Salva como nulo se o campo estiver vazio
+            )
+
+            when (result) {
+                is ResultWrapper.Success -> {
+                    _updateSuccess.postValue(true)
+                    // Recarrega o perfil para mostrar os dados atualizados
+                    loadUserProfile()
+                    setEditMode(false) // Sai do modo de edição
                 }
                 is ResultWrapper.Error -> {
                     _errorMessage.postValue(result.message)

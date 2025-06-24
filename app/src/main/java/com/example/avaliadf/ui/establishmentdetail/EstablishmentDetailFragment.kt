@@ -1,57 +1,66 @@
-// app/src/main/java/com/example/avaliadf/ui/establishmentdetail/EstablishmentDetailFragment.kt
 package com.example.avaliadf.ui.establishmentdetail
 
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.avaliadf.R
 import com.example.avaliadf.data.model.Establishment
-import com.example.avaliadf.data.repository.LocalEstablishmentRepositoryImpl
+import com.example.avaliadf.data.repository.FirestoreEstablishmentRepositoryImpl
 import com.example.avaliadf.databinding.FragmentEstablishmentDetailBinding
+import com.example.avaliadf.ui.base.BaseFragment // IMPORTAR
+import com.example.avaliadf.ui.establishmentdetail.adapters.ReviewAdapter
 
-class EstablishmentDetailFragment : Fragment() {
+// 1. MUDAR A HERANÇA DA CLASSE
+class EstablishmentDetailFragment :
+    BaseFragment<FragmentEstablishmentDetailBinding>(FragmentEstablishmentDetailBinding::inflate) {
 
-    private var _binding: FragmentEstablishmentDetailBinding? = null
-    private val binding get() = _binding!!
+    // 2. REMOVER _binding e binding
+    // private var _binding: FragmentEstablishmentDetailBinding? = null
+    // private val binding get() = _binding!!
 
     private lateinit var viewModel: EstablishmentDetailViewModel
     private val args: EstablishmentDetailFragmentArgs by navArgs()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentEstablishmentDetailBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    private lateinit var reviewAdapter: ReviewAdapter
+
+    // 3. REMOVER onCreateView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        // 4. CHAMAR super.onViewCreated() PRIMEIRO
         super.onViewCreated(view, savedInstanceState)
 
-        val repository = LocalEstablishmentRepositoryImpl()
+        // O resto da sua lógica continua intacta.
+        val repository = FirestoreEstablishmentRepositoryImpl()
         val factory = EstablishmentDetailViewModelFactory(repository)
         viewModel = ViewModelProvider(this, factory)[EstablishmentDetailViewModel::class.java]
 
         setupToolbar()
+        setupRecyclerView()
         setupObservers()
 
-        // Pede ao ViewModel para carregar os detalhes usando o ID recebido da navegação
         viewModel.loadEstablishmentDetails(args.establishmentId)
     }
 
     private fun setupToolbar() {
         binding.toolbarDetail.setNavigationOnClickListener {
             findNavController().navigateUp()
+        }
+    }
+
+    private fun setupRecyclerView() {
+        reviewAdapter = ReviewAdapter()
+        binding.recyclerViewReviews.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = reviewAdapter
+            isNestedScrollingEnabled = false // Mantém a rolagem suave dentro da CollapsingToolbarLayout
         }
     }
 
@@ -69,24 +78,34 @@ class EstablishmentDetailFragment : Fragment() {
         viewModel.establishment.observe(viewLifecycleOwner) { establishment ->
             establishment?.let { bindEstablishmentDetails(it) }
         }
+
+        viewModel.reviews.observe(viewLifecycleOwner) { reviews ->
+            binding.recyclerViewReviews.isVisible = reviews.isNotEmpty()
+            binding.textViewNoReviews.isVisible = reviews.isEmpty()
+            reviewAdapter.submitList(reviews)
+        }
+
+        viewModel.averageRating.observe(viewLifecycleOwner) { avgRating ->
+            val formattedRating = String.format("%.1f", avgRating)
+            binding.textViewDetailRating.text = formattedRating
+        }
     }
 
     private fun bindEstablishmentDetails(establishment: Establishment) {
-        // Preenche a UI com os dados recebidos
         binding.collapsingToolbar.title = establishment.name
         binding.textViewDetailHours.text = "Horário: ${establishment.hours ?: "Não informado"}"
         binding.textViewDetailPhone.text = "Telefone: ${establishment.phone ?: "Não informado"}"
-        binding.textViewDetailRating.text = establishment.rating?.toString() ?: "N/A"
 
-        // Carrega a imagem do header
+        binding.textViewDetailDescription.text = establishment.description ?: "Nenhuma descrição disponível."
+
+        // Assumindo que a imagem está nos assets
         val assetPath = "file:///android_asset/TrabProjetoIntegrador/img/${establishment.imageUrl}"
         Glide.with(this)
             .load(assetPath)
-            .placeholder(R.drawable.ic_city_placeholder)
-            .error(R.drawable.ic_city_placeholder)
+            .placeholder(R.drawable.ic_city_placeholder) // Imagem genérica enquanto carrega
+            .error(R.drawable.ic_city_placeholder) // Imagem genérica em caso de erro
             .into(binding.imageViewDetailHeader)
 
-        // Configura os botões de ação
         binding.buttonDetailLigar.setOnClickListener {
             establishment.phone?.let { startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:$it"))) }
         }
@@ -94,12 +113,11 @@ class EstablishmentDetailFragment : Fragment() {
             establishment.mapLink?.let { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(it))) }
         }
         binding.buttonDetailAvaliar.setOnClickListener {
-            Toast.makeText(context, "Navegar para avaliar ${establishment.name}", Toast.LENGTH_SHORT).show()
+            val action = EstablishmentDetailFragmentDirections
+                .actionEstablishmentDetailFragmentToReviewFragment(establishment.id)
+            findNavController().navigate(action)
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
+    // 5. REMOVER onDestroyView
 }
