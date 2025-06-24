@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meus AvaliaCoins</title>
+  <style>
+    :root {
+      --bg-yellow: #9e8807;
+      --red-primary: #d62828;
+      --card-bg: #fffefa;
+      --text-dark: #333;
+      --shadow-medium: rgba(0,0,0,0.15);
+      --red-hover: #a4161a;
+    }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--bg-yellow);
+      color: var(--text-dark);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh; /* Garante que o body ocupe a altura total da viewport */
+      justify-content: center; /* Centraliza o conteúdo verticalmente se houver espaço */
+      box-sizing: border-box; /* Inclui padding e border no width/height */
+    }
+
+    .back-btn {
+      background-color: var(--red-primary);
+      color: white;
+      border: none;
+      border-radius: 10px; /* Mais arredondado */
+      padding: 12px 22px; /* Maior para facilitar o toque */
+      margin-bottom: 30px; /* Mais espaço abaixo do botão */
+      cursor: pointer;
+      font-size: 1.05rem; /* Fonte um pouco maior */
+      text-decoration: none;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 3px 6px var(--shadow-medium); /* Sombra para destaque */
+    }
+
+    .back-btn:hover {
+      background-color: var(--red-hover);
+      transform: translateY(-2px);
+    }
+    .back-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 1px 3px var(--shadow-medium);
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      padding: 30px; /* Aumentar padding */
+      border-radius: 15px; /* Mais arredondado */
+      width: 100%;
+      max-width: 450px; /* Aumentar um pouco o max-width */
+      box-shadow: 0 6px 18px var(--shadow-medium); /* Sombra mais pronunciada */
+      text-align: center;
+      display: flex; /* Usar flexbox para centralizar conteúdo do card */
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 15px; /* Espaço entre elementos do card */
+    }
+
+    h1 {
+      font-size: 1.8rem; /* Título maior */
+      margin-bottom: 5px; /* Reduzir margem inferior */
+      color: var(--text-dark);
+    }
+
+    .balance {
+      font-size: 2.8rem; /* Saldo maior e mais visível */
+      color: var(--red-primary);
+      font-weight: bold;
+      letter-spacing: 0.05em; /* Pequeno espaçamento entre letras */
+    }
+
+    /* Responsividade para telas menores */
+    @media (max-width: 480px) {
+      body {
+        padding: 15px;
+      }
+      .back-btn {
+        padding: 10px 18px;
+        font-size: 0.95rem;
+        margin-bottom: 25px;
+      }
+      .card {
+        padding: 25px;
+        border-radius: 12px;
+      }
+      h1 {
+        font-size: 1.5rem;
+      }
+      .balance {
+        font-size: 2.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script>
+  // SUA CONFIGURAÇÃO DO FIREBASE (Copie do console do Firebase!)
+  const firebaseConfig = {
+    apiKey: "AIzaSyAs2kf8XRAtXRbzs0w18vjKAzKny4k7UbY",
+    authDomain: "avaliadff.firebaseapp.com",
+    projectId: "avaliadff",
+    storageBucket: "avaliadff.firebasestorage.app",
+    messagingSenderId: "703533363404",
+    appId: "1:703533363404:web:35b076f377ee868b669269",
+    measurementId: "G-4Y3HES6DQX"
+  };
+
+  // Inicializa o Firebase
+  firebase.initializeApp(firebaseConfig);
+
+  // Obtém as instâncias dos serviços que você vai usar
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+</script>
+
+<a class="back-btn" href="categorias.html">← Voltar para Categorias</a>
+
+<div class="card">
+  <h1>Seu saldo AvaliaCoins</h1>
+  <p class="balance" id="avaliacoinsBalance">Carregando...</p>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        // Usuário está logado
+        const balanceElement = document.getElementById("avaliacoinsBalance");
+
+        db.collection("users").doc(user.uid).get()
+          .then((doc) => {
+            if (doc.exists) {
+              const userData = doc.data();
+              balanceElement.textContent = userData.avaliacoins || 0; // Exibe o saldo ou 0 se não existir
+            } else {
+              console.log("Nenhum dado de usuário encontrado no Firestore.");
+              balanceElement.textContent = 0; // Saldo padrão
+            }
+          })
+          .catch((error) => {
+            console.error("Erro ao buscar dados do usuário:", error);
+            balanceElement.textContent = "Erro ao carregar";
+          });
+      } else {
+        // Usuário NÃO está logado, redireciona para a tela de login
+        alert("Você precisa estar logado para acessar esta página.");
+        window.location.href = "login.html";
+      }
+    });
+  });
+</script>
+</body>
+</html>

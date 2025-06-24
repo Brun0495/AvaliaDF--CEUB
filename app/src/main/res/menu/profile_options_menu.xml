@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/option_my_profile"
+        android:title="Meu Perfil" />
+    <item
+        android:id="@+id/option_settings"
+        android:title="Configurações" />
+    <item
+        android:id="@+id/option_my_avaliacoins"
+        android:title="Meus AvaliaCoins" />
+    <item
+        android:id="@+id/option_logout"
+        android:title="Sair" />
+</menu>

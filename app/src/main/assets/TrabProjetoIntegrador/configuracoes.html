@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Configurações</title>
+  <style>
+    :root {
+      --bg-yellow: #9e8807;
+      --red-primary: #d62828;
+      --card-bg: #fffefa;
+      --text-dark: #333;
+      --shadow-medium: rgba(0,0,0,0.15);
+      --red-hover: #a4161a;
+    }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--bg-yellow);
+      color: var(--text-dark);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh; /* Garante altura total */
+      justify-content: center; /* Centraliza conteúdo verticalmente */
+      box-sizing: border-box;
+    }
+
+    .back-btn {
+      background-color: var(--red-primary);
+      color: white;
+      border: none;
+      border-radius: 10px; /* Mais arredondado */
+      padding: 12px 22px; /* Maior para facilitar o toque */
+      margin-bottom: 30px; /* Mais espaço abaixo do botão */
+      cursor: pointer;
+      font-size: 1.05rem; /* Fonte um pouco maior */
+      text-decoration: none;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 3px 6px var(--shadow-medium);
+    }
+
+    .back-btn:hover {
+      background-color: var(--red-hover);
+      transform: translateY(-2px);
+    }
+    .back-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 1px 3px var(--shadow-medium);
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      padding: 30px; /* Aumentar padding */
+      border-radius: 15px; /* Mais arredondado */
+      width: 100%;
+      max-width: 450px; /* Aumentar um pouco o max-width */
+      box-shadow: 0 6px 18px var(--shadow-medium); /* Sombra mais pronunciada */
+      display: flex; /* Usar flexbox para layout interno */
+      flex-direction: column;
+      gap: 15px; /* Espaçamento entre elementos */
+    }
+
+    h2 {
+      font-size: 1.8rem; /* Título maior */
+      margin-bottom: 15px; /* Espaçamento ajustado */
+      text-align: center;
+      color: var(--text-dark);
+    }
+
+    label {
+      font-weight: bold;
+      margin-top: 10px; /* Espaçamento superior */
+      display: block;
+      font-size: 1.05rem; /* Fonte ligeiramente maior */
+      color: var(--text-dark);
+    }
+
+    input[type="password"] {
+      width: 100%;
+      padding: 12px; /* Aumentar padding */
+      margin-top: 5px; /* Espaçamento menor do label ao input */
+      margin-bottom: 15px; /* Espaçamento para o próximo label */
+      border-radius: 10px; /* Mais arredondado */
+      border: 1px solid #ccc;
+      font-size: 1rem;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      background-color: #fcfcfc; /* Fundo levemente off-white */
+    }
+    input[type="password"]:focus {
+      border-color: var(--red-primary);
+      box-shadow: 0 0 0 3px rgba(214, 40, 40, 0.2);
+      outline: none;
+    }
+
+    button {
+      background-color: var(--red-primary);
+      color: white;
+      border: none;
+      padding: 14px; /* Aumentar padding */
+      border-radius: 10px;
+      width: 100%;
+      cursor: pointer;
+      font-size: 1.1rem; /* Fonte maior */
+      margin-top: 20px; /* Mais espaço superior */
+      font-weight: 600;
+      transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+      box-shadow: 0 4px 10px var(--shadow-medium);
+    }
+
+    button:hover {
+      background-color: var(--red-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px var(--shadow-medium);
+    }
+    button:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 5px var(--shadow-medium);
+    }
+    .delete-btn {
+      background-color: #f44336; /* Vermelho para exclusão */
+      margin-top: 10px;
+    }
+    .delete-btn:hover {
+      background-color: #d32f2f;
+    }
+
+  </style>
+</head>
+<body>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script>
+  // SUA CONFIGURAÇÃO DO FIREBASE (Copie do console do Firebase!)
+  const firebaseConfig = {
+    apiKey: "AIzaSyAs2kf8XRAtXRbzs0w18vjKAzKny4k7UbY",
+    authDomain: "avaliadff.firebaseapp.com",
+    projectId: "avaliadff",
+    storageBucket: "avaliadff.firebasestorage.app",
+    messagingSenderId: "703533363404",
+    appId: "1:703533363404:web:35b076f377ee868b669269",
+    measurementId: "G-4Y3HES6DQX"
+  };
+
+  // Inicializa o Firebase
+  firebase.initializeApp(firebaseConfig);
+
+  // Obtém as instâncias dos serviços que você vai usar
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+</script>
+
+<a class="back-btn" href="categorias.html">← Voltar para Categorias</a>
+
+<div class="card">
+  <h2>Alterar Senha</h2>
+  <label for="senha-atual">Senha atual:</label>
+  <input type="password" id="senha-atual" />
+
+  <label for="nova-senha">Nova senha:</label>
+  <input type="password" id="nova-senha" />
+
+  <label for="confirmar-senha">Confirmar nova senha:</label>
+  <input type="password" id="confirmar-senha" />
+
+  <button id="alterarSenhaBtn">Salvar Alterações</button>
+
+  <button id="excluirContaBtn" class="delete-btn">Excluir Conta</button>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+      // Verifica se o usuário está logado ao carregar a página
+      auth.onAuthStateChanged(user => {
+          if (!user) {
+              alert("Você precisa estar logado para acessar as configurações.");
+              window.location.href = "login.html"; // Redireciona para login se não estiver logado
+          }
+      });
+  });
+
+  // Lógica para Alterar Senha
+  document.getElementById("alterarSenhaBtn").addEventListener("click", function() {
+    const currentUser = auth.currentUser;
+
+    if (!currentUser) {
+      alert("Nenhum usuário logado. Por favor, faça login novamente.");
+      window.location.href = "login.html";
+      return;
+    }
+
+    const oldPassword = document.getElementById("senha-atual").value;
+    const newPassword = document.getElementById("nova-senha").value;
+    const confirmNewPassword = document.getElementById("confirmar-senha").value;
+
+    if (!oldPassword || !newPassword || !confirmNewPassword) {
+      alert("Por favor, preencha todos os campos de senha.");
+      return;
+    }
+
+    if (newPassword !== confirmNewPassword) {
+      alert("A nova senha e a confirmação não coincidem.");
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      alert("A nova senha deve ter no mínimo 6 caracteres.");
+      return;
+    }
+
+    // 1. Reautenticar o usuário
+    const credential = firebase.auth.EmailAuthProvider.credential(currentUser.email, oldPassword);
+
+    currentUser.reauthenticateWithCredential(credential)
+      .then(() => {
+        // 2. Se a reautenticação for bem-sucedida, atualize a senha
+        currentUser.updatePassword(newPassword)
+          .then(() => {
+            alert("Senha alterada com sucesso!");
+            // Limpa os campos após a alteração
+            document.getElementById("senha-atual").value = "";
+            document.getElementById("nova-senha").value = "";
+            document.getElementById("confirmar-senha").value = "";
+          })
+          .catch((error) => {
+            console.error("Erro ao atualizar senha:", error);
+            alert("Erro ao alterar a senha: " + error.message);
+          });
+      })
+      .catch((error) => {
+        console.error("Erro de reautenticação:", error);
+        if (error.code === "auth/wrong-password") {
+          alert("Senha atual incorreta. Por favor, verifique.");
+        } else {
+          alert("Erro na reautenticação: " + error.message + ". Tente novamente.");
+        }
+      });
+  });
+
+  // Lógica para Excluir Conta
+  document.getElementById("excluirContaBtn").addEventListener("click", function() {
+      const currentUser = auth.currentUser;
+
+      if (!currentUser) {
+          alert("Nenhum usuário logado para excluir conta.");
+          window.location.href = "login.html";
+          return;
+      }
+
+      if (confirm("Tem certeza que deseja excluir sua conta? Esta ação é irreversível e excluirá todos os seus dados!")) {
+          // Reautenticação é necessária para excluir conta por segurança
+          // Você precisaria pedir a senha atual novamente aqui
+          // Por simplicidade, vamos pular a reautenticação por enquanto, mas em um app real ela seria obrigatória.
+          // Para fazer a reautenticação, seria necessário um campo de senha no formulário ou um modal para isso.
+
+          currentUser.delete()
+              .then(() => {
+                  // Conta excluída com sucesso do Firebase Authentication
+                  // Agora, exclua o documento do usuário no Firestore
+                  return db.collection("users").doc(currentUser.uid).delete();
+              })
+              .then(() => {
+                  alert("Sua conta foi excluída com sucesso.");
+                  window.location.href = "index.html"; // Redireciona para a tela inicial
+              })
+              .catch((error) => {
+                  console.error("Erro ao excluir conta:", error);
+                  // Se o erro for 'auth/requires-recent-login', peça para o usuário fazer login novamente.
+                  if (error.code === "auth/requires-recent-login") {
+                      alert("Por segurança, você precisa fazer login novamente para excluir sua conta. Faça login e tente de novo.");
+                      auth.signOut().then(() => {
+                          window.location.href = "login.html"; // Redireciona para login
+                      });
+                  } else {
+                      alert("Erro ao excluir conta: " + error.message);
+                  }
+              });
+      }
+  });
+</script>
+</body>
+</html>

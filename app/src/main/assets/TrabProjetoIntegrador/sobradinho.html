@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>O que fazer em Sobradinho</title>
+  <style>
+    :root {
+      --bg-yellow: #9e8807;
+      --red-primary: #d62828;
+      --orange-secondary: #f77f00;
+      --blue-accent: #0077cc;
+      --text-dark: #333;
+      --white-card: #fff;
+      --shadow-light: rgba(0,0,0,0.1);
+      --shadow-medium: rgba(0,0,0,0.15);
+      --shadow-strong: rgba(0,0,0,0.2);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-yellow);
+      color: var(--text-dark);
+      line-height: 1.6;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: linear-gradient(90deg, var(--red-primary), var(--orange-secondary));
+      color: white;
+      padding: 15px 20px;
+      box-shadow: 0 3px 6px var(--shadow-medium);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.5rem;
+      z-index: 1000;
+    }
+
+    .filter-container {
+      margin-top: 80px; /* Altura do header + espaço */
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+      background-color: var(--white-card);
+      box-shadow: 0 2px 5px var(--shadow-light);
+      border-bottom-left-radius: 15px;
+      border-bottom-right-radius: 15px;
+    }
+
+    #filterToggle {
+      width: 38px; /* Ícone um pouco maior para toque */
+      height: 38px;
+      cursor: pointer;
+      fill: var(--red-primary);
+      transition: transform 0.2s ease;
+    }
+
+    #filterToggle:active {
+      transform: scale(0.9);
+    }
+
+    #filterOptions {
+      display: none;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px; /* Espaçamento ajustado para botões */
+      width: 100%;
+      padding-top: 10px;
+      border-top: 1px solid #eee;
+    }
+
+    .filter button {
+      background-color: var(--red-primary);
+      color: white;
+      border: none;
+      padding: 10px 18px; /* Padding ajustado */
+      border-radius: 25px; /* Mais arredondado */
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem; /* Fonte ligeiramente menor */
+      flex-grow: 1; /* Permite que os botões cresçam */
+      min-width: 100px; /* Garante um tamanho mínimo */
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .filter button:hover, .filter button:focus {
+      background-color: var(--orange-secondary);
+      transform: translateY(-2px);
+    }
+
+    main {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 25px; /* Aumentar espaçamento entre cards */
+      padding: 20px 15px 100px; /* Mais padding no bottom para o botão flutuante */
+    }
+
+    .card {
+      width: 100%;
+      max-width: 500px; /* Aumentar um pouco o max-width */
+      background: var(--white-card);
+      border-radius: 15px; /* Bordas mais arredondadas */
+      box-shadow: 0 6px 18px var(--shadow-medium);
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:active {
+      transform: scale(0.98);
+      box-shadow: 0 3px 10px var(--shadow-light);
+    }
+
+    .card img {
+      width: 100%;
+      height: 200px; /* Altura fixa para imagens */
+      object-fit: cover;
+      display: block; /* Remover espaço extra abaixo da imagem */
+      cursor: pointer; /* Mostrar que imagem é clicável */
+    }
+
+    .card-content {
+      padding: 18px; /* Padding ligeiramente maior */
+    }
+
+    .card-content h3 {
+      margin: 0 0 8px; /* Espaçamento ajustado */
+      font-size: 1.3rem; /* Fonte um pouco maior */
+      color: var(--red-primary);
+    }
+
+    .card-content p {
+      margin: 4px 0;
+      font-size: 0.9rem; /* Fonte padrão para parágrafos */
+      color: var(--text-dark);
+    }
+
+    .descricao {
+      margin-top: 10px;
+      font-size: 0.85rem;
+      color: #444;
+      display: none; /* Inicia oculto */
+      transition: all 0.3s ease;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap; /* Permitir quebra de linha em telas pequenas */
+      justify-content: flex-start;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .actions a {
+      background-color: var(--orange-secondary);
+      color: white;
+      padding: 10px 18px;
+      text-decoration: none;
+      border-radius: 10px; /* Mais arredondado */
+      font-size: 0.85rem; /* Fonte menor para caber mais botões */
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      flex-grow: 1; /* Botões flexíveis */
+      text-align: center;
+    }
+
+    .actions a:hover {
+      background-color: #c75c00;
+      transform: translateY(-2px);
+    }
+
+    .actions a.btn-avaliar {
+      background-color: var(--blue-accent);
+    }
+
+    .actions a.btn-avaliar:hover {
+      background-color: #005fa3;
+    }
+
+    .btn-voltar {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: var(--red-primary);
+      color: white;
+      font-weight: 700;
+      font-size: 1.05rem; /* Um pouco maior */
+      padding: 12px 30px; /* Mais padding para facilitar o toque */
+      border-radius: 30px; /* Bem arredondado */
+      text-decoration: none;
+      box-shadow: 0 5px 15px var(--shadow-strong);
+      z-index: 1001;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .btn-voltar:active {
+      transform: translateX(-50%) scale(0.95);
+      background-color: #a32020;
+    }
+
+    /* Media Queries para ajuste fino em telas muito pequenas */
+    @media (max-width: 400px) {
+      header {
+        font-size: 1.3rem;
+        padding: 12px 15px;
+      }
+      .filter-container {
+        margin-top: 70px;
+        padding: 10px;
+        gap: 10px;
+      }
+      #filterToggle {
+        width: 30px;
+        height: 30px;
+      }
+      .filter button {
+        padding: 8px 15px;
+        font-size: 0.85rem;
+        min-width: unset; /* Remove min-width para maior flexibilidade */
+        flex-basis: calc(50% - 10px); /* Dois botões por linha */
+      }
+      .card img {
+        height: 160px;
+      }
+      .card-content {
+        padding: 15px;
+      }
+      .card-content h3 {
+        font-size: 1.1rem;
+      }
+      .card-content p {
+        font-size: 0.8rem;
+      }
+      .actions {
+        flex-direction: column; /* Empilhar botões de ação */
+        gap: 8px;
+      }
+      .actions a {
+        font-size: 0.8rem;
+        padding: 10px 15px;
+      }
+      .btn-voltar {
+        font-size: 0.95rem;
+        padding: 10px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>Sobradinho - O que fazer</header>
+
+  <div class="filter-container">
+    <svg id="filterToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <path d="M3 4h18v2l-7 8v6l-4-2v-4L3 6V4z"/>
+    </svg>
+    <div class="filter" id="filterOptions">
+      <button onclick="filter('todos')">Todos</button>
+      <button onclick="filter('restaurante')">Restaurantes</button>
+      <button onclick="filter('lazer')">Lazer</button>
+      <button onclick="filter('hotel')">Hotéis</button>
+      <button onclick="filter('cinema')">Cinema</button>
+      <button onclick="filter('teatro')">Teatro</button>
+      <button onclick="filter('musica')">Música</button>
+      <button onclick="filter('esportes')">Esportes</button>
+    </div>
+  </div>
+
+  <main>
+    <div class="card restaurante">
+      <img src="img/restaurante_sobradinho.jpg" alt="Restaurante Sabor do Cerrado">
+      <div class="card-content">
+        <h3>Restaurante Sabor do Cerrado</h3>
+        <p>⭐ 4.5 • Seg - Sáb: 11h às 22h</p>
+        <p class="descricao">Restaurante especializado na culinária regional com pratos típicos do Cerrado.</p>
+        <div class="actions">
+          <a href="tel:6112345678">Ligar</a>
+          <a href="https://maps.google.com" target="_blank">Rota</a>
+          <a href="avaliar.html?local=Restaurante+Sabor+do+Cerrado" class="btn-avaliar">Avaliar</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card lazer">
+      <img src="img/parque_aguasclaras.jpg" alt="Parque da Cidade">
+      <div class="card-content">
+        <h3>Parque da Cidade</h3>
+        <p>⭐ 4.8 • Aberto 24h</p>
+        <p class="descricao">Área verde para caminhadas, piqueniques e lazer ao ar livre para toda a família.</p>
+        <div class="actions">
+          <a href="tel:6100000000">Ligar</a>
+          <a href="https://maps.google.com" target="_blank">Rota</a>
+          <a href="avaliar.html?local=Parque+da+Cidade" class="btn-avaliar">Avaliar</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card hotel">
+      <img src="img/hotel_sobradinho.jpg" alt="Hotel Estrela do Cerrado">
+      <div class="card-content">
+        <h3>Hotel Estrela do Cerrado</h3>
+        <p>⭐ 4.2 • Check-in: 14h | Check-out: 12h</p>
+        <p class="descricao">Hotel confortável com piscina, wifi e café da manhã incluso, próximo ao centro.</p>
+        <div class="actions">
+          <a href="tel:6199999999">Ligar</a>
+          <a href="https://maps.google.com" target="_blank">Rota</a>
+          <a href="avaliar.html?local=Hotel+Estrela+do+Cerrado" class="btn-avaliar">Avaliar</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card cinema">
+      <img src="img/cinema_aguasclaras.jpg" alt="Cine Sobradinho">
+      <div class="card-content">
+        <h3>Cine Sobradinho</h3>
+        <p>⭐ 4.0 • Seg - Dom: 14h às 23h</p>
+        <p class="descricao">Cinema com salas modernas, sessões de filmes nacionais e internacionais.</p>
+        <div class="actions">
+          <a href="tel:6100112233">Ligar</a>
+          <a href="https://maps.google.com" target="_blank">Rota</a>
+          <a href="avaliar.html?local=Cine+Sobradinho" class="btn-avaliar">Avaliar</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <a href="categorias.html" class="btn-voltar">Voltar</a>
+
+  <script>
+    const filterToggle = document.getElementById('filterToggle');
+    const filterOptions = document.getElementById('filterOptions');
+
+    // Mostra/esconde as opções de filtro ao clicar no ícone
+    filterToggle.addEventListener('click', () => {
+      if (filterOptions.style.display === 'flex') {
+        filterOptions.style.display = 'none';
+      } else {
+        filterOptions.style.display = 'flex';
+      }
+    });
+
+    // Função para filtrar os cards por categoria
+    function filter(category) {
+      const cards = document.querySelectorAll('.card');
+      if (category === 'todos') {
+        cards.forEach(card => (card.style.display = 'block'));
+      } else {
+        cards.forEach(card => {
+          if (card.classList.contains(category)) {
+            card.style.display = 'block';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      }
+    }
+
+    // Mostrar/esconder descrição ao clicar na imagem
+    document.querySelectorAll('.card img').forEach(img => {
+      img.addEventListener('click', function () {
+        // Encontra o elemento com a classe 'descricao' dentro do mesmo 'card'
+        const descricao = this.closest('.card').querySelector('.descricao');
+        
+        // Alterna a propriedade 'display'
+        if (descricao.style.display === 'none' || !descricao.style.display) {
+          descricao.style.display = 'block';
+        } else {
+          descricao.style.display = 'none';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

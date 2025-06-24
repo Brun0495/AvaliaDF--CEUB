@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Avaliar Local</title>
+  <style>
+    :root {
+      --fundo: #FFF3B0;
+      --vermelho: #C1121F;
+      --vermelho-escuro: #8F0D18;
+      --texto: #333;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--fundo);
+      color: var(--texto);
+    }
+
+    header {
+      background-color: var(--vermelho);
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    main {
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    form, #thankYouScreen {
+      background-color: var(--fundo);
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 450px;
+    }
+
+    h2 {
+      margin-top: 0;
+      text-align: center;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    select, textarea {
+      width: 100%;
+      padding: 12px;
+      margin-top: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      background-color: var(--vermelho);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      margin-top: 15px;
+    }
+
+    button:hover {
+      background-color: var(--vermelho-escuro);
+    }
+
+    .question-step {
+      display: none;
+    }
+
+    .question-step.active {
+      display: block;
+    }
+
+    #thankYouScreen {
+      display: none;
+      text-align: center;
+    }
+
+    #thankYouScreen h2 {
+      color: var(--vermelho);
+    }
+
+    .btn.back-btn-topbar {
+      background-color: var(--vermelho);
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      display: inline-block;
+      text-decoration: none;
+      margin-top: 20px;
+    }
+
+    .btn.back-btn-topbar:hover {
+      background-color: var(--vermelho-escuro);
+    }
+
+    @media (max-width: 500px) {
+      form, #thankYouScreen {
+        padding: 15px;
+        border-radius: 12px;
+      }
+
+      button {
+        font-size: 16px;
+        padding: 12px;
+      }
+
+      header {
+        font-size: 20px;
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script>
+  // SUA CONFIGURAÇÃO DO FIREBASE (Copie do console do Firebase!)
+  const firebaseConfig = {
+    apiKey: "AIzaSyAs2kf8XRAtXRbzs0w18vjKAzKny4k7UbY",
+    authDomain: "avaliadff.firebaseapp.com",
+    projectId: "avaliadff",
+    storageBucket: "avaliadff.firebasestorage.app",
+    messagingSenderId: "703533363404",
+    appId: "1:703533363404:web:35b076f377ee868b669269",
+    measurementId: "G-4Y3HES6DQX"
+  };
+
+  // Inicializa o Firebase
+  firebase.initializeApp(firebaseConfig);
+
+  // Obtém as instâncias dos serviços que você vai usar
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+</script>
+
+<header>Avaliar Local</header>
+<main>
+  <form id="formAvaliacao">
+    <h2 id="nomeLocal">Avaliação</h2>
+
+    <div class="question-step active" id="step1">
+      <label for="nota">Nota (1 a 5):</label>
+      <select id="nota" required>
+        <option value="">Selecione</option>
+        <option value="1">1 - Muito ruim</option>
+        <option value="2">2 - Ruim</option>
+        <option value="3">3 - Regular</option>
+        <option value="4">4 - Bom</option>
+        <option value="5">5 - Excelente</option>
+      </select>
+
+      <label for="comentario">Comentário:</label>
+      <textarea id="comentario" required></textarea>
+    </div>
+
+    <div class="question-step" id="step2">
+      <label for="recomendacao">De 0 a 10, quanto você recomendaria?</label>
+      <select id="recomendacao" required>
+        <option value="">Selecione</option>
+        <script>
+          for (let i = 0; i <= 10; i++) {
+            document.write(`<option value="${i}">${i}</option>`);
+          }
+        </script>
+      </select>
+    </div>
+
+    <div class="question-step" id="step3">
+      <label for="atendimento">Nota para atendimento (1 a 10):</label>
+      <select id="atendimento" required>
+        <option value="">Selecione</option>
+        <script>
+          for (let i = 1; i <= 10; i++) {
+            document.write(`<option value="${i}">${i}</option>`);
+          }
+        </script>
+      </select>
+    </div>
+
+    <div class="question-step" id="step4">
+      <label for="chances">Chances de voltar a usar (1 a 5):</label>
+      <select id="chances" required>
+        <option value="">Selecione</option>
+        <option value="1">1 - Nenhuma</option>
+        <option value="2">2 - Poucas</option>
+        <option value="3">3 - Médias</option>
+        <option value="4">4 - Boas</option>
+        <option value="5">5 - Certamente</option>
+      </select>
+    </div>
+
+    <button type="button" id="nextBtn">Próxima</button>
+  </form>
+
+  <div id="thankYouScreen">
+    <h2>Obrigado pela avaliação!</h2>
+    <p>Você ganhou <strong>50 AvaliaCoins!</strong></p>
+    <a href="categorias.html" class="btn back-btn-topbar">Voltar para Categorias</a>
+  </div>
+</main>
+
+<script>
+  const localParam = new URLSearchParams(window.location.search).get("local");
+  document.getElementById("nomeLocal").textContent = "Avaliar: " + (localParam ? decodeURIComponent(localParam) : "Local");
+
+  const steps = document.querySelectorAll(".question-step");
+  const nextBtn = document.getElementById("nextBtn");
+  const form = document.getElementById("formAvaliacao");
+  const thankYouScreen = document.getElementById("thankYouScreen");
+
+  let current = 0;
+
+  function showStep(index) {
+    steps.forEach((step, i) => {
+      step.classList.toggle("active", i === index);
+    });
+    nextBtn.textContent = index === steps.length - 1 ? "Enviar Avaliação" : "Próxima";
+  }
+
+  function validateStep() {
+    const activeStep = steps[current];
+    const inputs = activeStep.querySelectorAll("select, textarea");
+    for (const input of inputs) {
+      if (!input.value.trim()) {
+        input.style.borderColor = "red";
+        return false;
+      } else {
+        input.style.borderColor = "#ccc";
+      }
+    }
+    return true;
+  }
+
+  nextBtn.addEventListener("click", () => {
+    if (!validateStep()) return;
+
+    if (current < steps.length - 1) {
+      current++;
+      showStep(current);
+    } else {
+      // Último passo, enviar avaliação para o Firebase
+      const currentUser = auth.currentUser;
+      if (!currentUser) {
+        alert("Você precisa estar logado para enviar uma avaliação.");
+        window.location.href = "login.html";
+        return;
+      }
+
+      const localName = (localParam ? decodeURIComponent(localParam) : "Local Desconhecido");
+      const nota = parseInt(document.getElementById("nota").value);
+      const comentario = document.getElementById("comentario").value;
+      const recomendacao = parseInt(document.getElementById("recomendacao").value);
+      const atendimento = parseInt(document.getElementById("atendimento").value);
+      const chances = parseInt(document.getElementById("chances").value);
+
+      // 1. Salvar a avaliação no Firestore
+      db.collection("reviews").add({
+        localName: localName,
+        score: nota,
+        comment: comentario,
+        recommendation: recomendacao,
+        service_rating: atendimento,
+        chances_to_return: chances,
+        userId: currentUser.uid,
+        userEmail: currentUser.email, // Opcional: para referência rápida
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      })
+      .then(() => {
+        console.log("Avaliação salva com sucesso!");
+
+        // 2. Atualizar AvaliaCoins do usuário
+        const userRef = db.collection("users").doc(currentUser.uid);
+        return userRef.update({
+          avaliacoins: firebase.firestore.FieldValue.increment(50) // Adiciona 50 AvaliaCoins
+        });
+      })
+      .then(() => {
+        console.log("AvaliaCoins atualizados!");
+        form.style.display = "none";
+        thankYouScreen.style.display = "block"; // Mostra a tela de agradecimento
+      })
+      .catch((error) => {
+        console.error("Erro ao salvar avaliação ou atualizar AvaliaCoins:", error);
+        alert("Erro ao enviar avaliação: " + error.message);
+      });
+    }
+  });
+
+  showStep(current);
+</script>
+</body>
+</html>

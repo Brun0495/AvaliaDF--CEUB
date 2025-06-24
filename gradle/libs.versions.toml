@@ -1,0 +1,51 @@
+[versions]
+# Versões dos plugins e bibliotecas principais
+agp = "8.10.0" # Versão do Android Gradle Plugin (mantenha a sua ou atualize se desejar)
+kotlin = "2.0.21" # Versão do Kotlin (mantenha a sua ou atualize se desejar)
+
+# Bibliotecas AndroidX para Views tradicionais (necessárias para WebView e AppCompatActivity)
+appcompat = "1.6.1" # Versão para AppCompatActivity e componentes de UI
+activityKtx = "1.9.0" # Extensões Kotlin para Activity
+coreKtx = "1.16.0" # Core Kotlin Extensions
+
+# ADICIONADO: Versão para a biblioteca Material Components
+materialComponents = "1.12.0" # Use a versão mais recente e estável do Material Components
+
+# Dependências do Firebase (VERIFIQUE AS VERSÕES MAIS RECENTES NO CONSOLE DO FIREBASE!)
+firebaseBom = "32.8.1" # Firebase Bill of Materials (BOM) para gerenciar versões do Firebase
+googleServices = "4.4.1" # Plugin do Google Services para Firebase
+
+# Dependências de teste
+junit = "4.13.2"
+junitVersion = "1.2.1"
+espressoCore = "3.6.1"
+
+# Outras bibliotecas AndroidX
+lifecycleRuntimeKtx = "2.9.0"
+
+
+[libraries]
+# Bibliotecas AndroidX para Views tradicionais
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+androidx-activity-ktx = { group = "androidx.activity", name = "activity-ktx", version.ref = "activityKtx" }
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
+
+# ADICIONADO: Biblioteca Material Components (necessário para o tema MaterialComponents.Light.NoActionBar)
+material-components = { group = "com.google.android.material", name = "material", version.ref = "materialComponents" }
+
+# Dependências do Firebase
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
+firebase-firestore-ktx = { group = "com.google.firebase", name = "firebase-firestore-ktx" } # Para Firestore em Kotlin
+firebase-auth-ktx = { group = "com.google.firebase", name = "firebase-auth-ktx" } # Para Autenticação em Kotlin
+
+# Dependências de teste
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+googleServices = { id = "com.google.gms.google-services", version.ref = "googleServices" } # Plugin do Google Services

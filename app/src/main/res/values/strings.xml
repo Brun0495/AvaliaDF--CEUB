@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">AvaliaDF</string>
+
+    <string-array name="is_branch_options">
+        <item>Selecione</item>
+        <item>Sim</item>
+        <item>Não</item>
+    </string-array>
+</resources>

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "703533363404",
+    "project_id": "avaliadff",
+    "storage_bucket": "avaliadff.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:703533363404:android:000b8cecf3b78fd5669269",
+        "android_client_info": {
+          "package_name": "com.example.avaliadf"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4hvuIawgSeDhLRDq5lnMcHQFuuVBTzWg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

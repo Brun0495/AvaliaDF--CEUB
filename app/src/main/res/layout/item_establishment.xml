@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/imageViewRestaurante"
+            android:layout_width="0dp"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:src="@tools:sample/backgrounds/scenic" />
+
+        <TextView
+            android:id="@+id/textViewNomeRestaurante"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:textAppearance="?attr/textAppearanceHeadline6"
+            app:layout_constraintTop_toBottomOf="@id/imageViewRestaurante"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="Nome do Restaurante" />
+
+        <TextView
+            android:id="@+id/textViewHorario"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:drawablePadding="8dp"
+            app:drawableStartCompat="@drawable/ic_time"
+            app:layout_constraintTop_toBottomOf="@id/textViewNomeRestaurante"
+            app:layout_constraintStart_toStartOf="@id/textViewNomeRestaurante"
+            app:layout_constraintEnd_toEndOf="@id/textViewNomeRestaurante"
+            tools:text="Horário: 08:00 - 22:00" />
+
+        <TextView
+            android:id="@+id/textViewTelefone"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:drawablePadding="8dp"
+            app:drawableStartCompat="@drawable/ic_phone"
+            app:layout_constraintTop_toBottomOf="@id/textViewHorario"
+            app:layout_constraintStart_toStartOf="@id/textViewNomeRestaurante"
+            app:layout_constraintEnd_toEndOf="@id/textViewNomeRestaurante"
+            tools:text="Telefone: (61) 99999-9999" />
+
+        <TextView
+            android:id="@+id/textViewAvaliacao"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:drawablePadding="8dp"
+            android:gravity="center_vertical"
+            app:drawableStartCompat="@drawable/ic_star"
+            app:layout_constraintTop_toBottomOf="@id/textViewTelefone"
+            app:layout_constraintStart_toStartOf="@id/textViewNomeRestaurante"
+            app:layout_constraintEnd_toEndOf="@id/textViewNomeRestaurante"
+            tools:text="4.5" />
+
+        <LinearLayout
+            android:id="@+id/layoutBotoes"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintTop_toBottomOf="@id/textViewAvaliacao"
+            app:layout_constraintStart_toStartOf="@id/textViewNomeRestaurante"
+            app:layout_constraintEnd_toEndOf="@id/textViewNomeRestaurante"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:weightSum="3">
+
+            <Button
+                android:id="@+id/buttonLigar"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Ligar"
+                android:layout_marginEnd="4dp"/>
+            <Button
+                android:id="@+id/buttonVerRota"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Rota"
+                android:layout_marginEnd="4dp"
+                android:layout_marginStart="4dp"/>
+            <Button
+                android:id="@+id/buttonAvaliar"
+                style="@style/Widget.Material3.Button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Avaliar"
+                android:layout_marginStart="4dp"/>
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

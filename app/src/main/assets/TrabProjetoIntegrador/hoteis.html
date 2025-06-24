@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hotéis</title>
+  <style>
+    :root {
+      --bg-yellow: #9e8807;
+      --red-primary: #d62828;
+      --red-hover: #a4161a;
+      --text-dark: #333;
+      --white-card: #fff;
+      --shadow-light: rgba(0, 0, 0, 0.1);
+      --shadow-medium: rgba(0, 0, 0, 0.15);
+      --shadow-strong: rgba(0, 0, 0, 0.2);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-yellow);
+      color: var(--text-dark);
+      line-height: 1.6;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background-color: var(--red-primary);
+      padding: 15px; /* Padding ajustado */
+      border-bottom: 4px solid var(--red-hover);
+      box-shadow: 0 4px 8px var(--shadow-medium);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .topbar h1 {
+      color: white;
+      font-size: 1.6rem; /* Título um pouco maior */
+      margin: 0; /* Remover margem padrão */
+      flex-grow: 1; /* Permite que o título ocupe o espaço */
+      text-align: center;
+    }
+
+    .back-btn-topbar {
+      background-color: transparent;
+      border: none;
+      color: white;
+      font-size: 1.3rem; /* Ícone de voltar maior */
+      cursor: pointer;
+      text-decoration: none;
+      padding: 8px 12px;
+      border-radius: 12px;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      display: flex;
+      align-items: center;
+      user-select: none;
+      position: absolute; /* Posiciona à esquerda */
+      left: 15px;
+    }
+
+    .back-btn-topbar:hover,
+    .back-btn-topbar:focus {
+      background-color: var(--red-hover);
+      outline: none;
+      transform: translateX(-3px); /* Efeito sutil ao passar o mouse */
+    }
+    .back-btn-topbar:active {
+      transform: translateX(0);
+      background-color: #c75c00; /* Cor ativa */
+    }
+
+    .container {
+      max-width: 650px; /* Aumentar um pouco a largura máxima */
+      margin: 20px auto 80px; /* Margem inferior para o botão voltar */
+      padding: 20px;
+    }
+
+    .filter {
+      margin: 25px 0; /* Mais espaçamento para o filtro */
+      text-align: center;
+      background-color: var(--white-card);
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px var(--shadow-light);
+    }
+
+    select {
+      padding: 12px 20px;
+      border-radius: 10px;
+      border: 2px solid var(--red-primary);
+      font-size: 1rem; /* Ajuste da fonte */
+      width: 100%;
+      max-width: 350px; /* Limitar largura do select */
+      cursor: pointer;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      background-color: #fcfcfc;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%20viewBox%3D%220%200%20292.4%20292.4%22%3E%3Cpath%20fill%3D%22%23d62828%22%20d%3D%22M287%20197.3L159.2%2069.5c-3.6-3.6-8.4-5.4-13.2-5.4s-9.6%201.8-13.2%205.4L5.4%20197.3c-7.2%207.2-7.2%2018.9%200%2026.1s18.9%207.2%2026.1%200L146%20124.6l114.5%20114.5c7.2%207.2%2018.9%207.2%2026.1%200s7.2-18.9%200-26.1z%22%2F%3E%3C%2Fsvg%3E'); /* Seta para o select */
+      background-repeat: no-repeat;
+      background-position: right 15px top 50%;
+      background-size: 15px auto;
+    }
+
+    select:focus {
+      border-color: var(--red-hover);
+      box-shadow: 0 0 0 3px rgba(214, 40, 40, 0.2);
+      outline: none;
+    }
+
+    .place-card {
+      background-color: var(--white-card);
+      border-radius: 15px; /* Mais arredondado */
+      padding: 20px;
+      margin-bottom: 25px;
+      box-shadow: 0 6px 18px var(--shadow-medium); /* Sombra mais pronunciada */
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .place-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px var(--shadow-strong);
+    }
+    .place-card:active {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px var(--shadow-light);
+    }
+
+    .place-img {
+      width: 100%;
+      height: 200px; /* Altura fixa para consistência */
+      object-fit: cover;
+      border-radius: 10px; /* Mais arredondado */
+      margin-bottom: 15px;
+      box-shadow: 0 2px 8px var(--shadow-light);
+      transition: filter 0.3s ease;
+    }
+
+    .place-card:hover .place-img {
+      filter: brightness(0.9); /* Escurece um pouco no hover */
+    }
+
+    .place-name {
+      font-size: 1.4rem; /* Nome do local um pouco maior */
+      font-weight: 700;
+      color: var(--red-primary);
+      margin-bottom: 12px;
+    }
+
+    .info {
+      margin: 8px 0; /* Espaçamento ajustado */
+      font-size: 1rem; /* Fonte ligeiramente menor */
+      color: var(--text-dark);
+    }
+
+    .info strong {
+      color: var(--red-primary);
+    }
+
+    .buttons {
+      display: flex;
+      gap: 10px; /* Espaçamento entre botões */
+      margin-top: 20px; /* Mais espaço acima dos botões */
+      flex-wrap: wrap; /* Quebra de linha em telas pequenas */
+      justify-content: center;
+    }
+
+    .btn {
+      flex: 1 1 140px; /* Ajuste da base flexível */
+      background-color: var(--red-primary);
+      color: white;
+      padding: 12px 0; /* Padding ajustado */
+      border: none;
+      border-radius: 12px;
+      text-align: center;
+      cursor: pointer;
+      text-decoration: none;
+      font-size: 0.95rem; /* Fonte ligeiramente menor */
+      transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+      user-select: none;
+      box-shadow: 0 2px 6px var(--shadow-light);
+    }
+
+    .btn:hover,
+    .btn:focus {
+      background-color: var(--red-hover);
+      outline: none;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px var(--shadow-medium);
+    }
+    .btn:active {
+      transform: translateY(0);
+      box-shadow: 0 1px 3px var(--shadow-light);
+    }
+
+    /* Media Queries para ajuste fino em telas muito pequenas */
+    @media (max-width: 400px) {
+      .topbar h1 {
+        font-size: 1.4rem;
+      }
+      .back-btn-topbar {
+        font-size: 1.1rem;
+        left: 10px;
+        padding: 6px 10px;
+      }
+      .container {
+        padding: 15px 10px;
+        margin: 15px auto 70px;
+      }
+      .filter {
+        padding: 10px;
+        margin: 20px 0;
+      }
+      select {
+        padding: 10px 15px;
+        font-size: 0.9rem;
+        background-position: right 10px top 50%;
+        background-size: 12px auto;
+      }
+      .place-card {
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 12px;
+      }
+      .place-img {
+        height: 150px;
+        margin-bottom: 12px;
+        border-radius: 8px;
+      }
+      .place-name {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+      }
+      .info {
+        font-size: 0.9rem;
+        margin: 6px 0;
+      }
+      .btn {
+        flex: 1 1 100%; /* Botões empilhados */
+        padding: 10px 0;
+        font-size: 0.85rem;
+      }
+      .buttons {
+        gap: 8px;
+        margin-top: 15px;
+      }
+    }
+  </style>
+
+</head>
+<body>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script>
+  // SUA CONFIGURAÇÃO DO FIREBASE (Copie do console do Firebase!)
+  const firebaseConfig = {
+    apiKey: "AIzaSyAs2kf8XRAtXRbzs0w18vjKAzKny4k7UbY",
+    authDomain: "avaliadff.firebaseapp.com",
+    projectId: "avaliadff",
+    storageBucket: "avaliadff.firebasestorage.app",
+    messagingSenderId: "703533363404",
+    appId: "1:703533363404:web:35b076f377ee868b669269",
+    measurementId: "G-4Y3HES6DQX"
+  };
+
+  // Inicializa o Firebase
+  firebase.initializeApp(firebaseConfig);
+
+  // Obtém as instâncias dos serviços que você vai usar
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+</script>
+
+<div class="topbar">
+  <a href="categorias.html" class="back-btn-topbar" aria-label="Voltar">← Voltar</a>
+  <h1>Hotéis</h1>
+</div>
+
+<div class="container">
+
+  <div class="filter">
+    <label for="cityFilter"><strong>Filtrar por cidade:</strong></label><br />
+    <select id="cityFilter" onchange="loadPlaces('hotel', this.value)">
+      <option value="todas">Todas</option>
+      <option value="plano">Plano Piloto</option>
+      <option value="taguatinga">Taguatinga</option>
+      <option value="lagosul">Lago Sul</option>
+    </select>
+  </div>
+
+  <div id="placesListContainer">
+    <p style="text-align: center;">Carregando hotéis...</p>
+  </div>
+
+</div>
+
+<script>
+  // Função para carregar locais do Firestore
+  async function loadPlaces(category, cityFilter = 'todas') {
+    const placesListContainer = document.getElementById('placesListContainer');
+    placesListContainer.innerHTML = '<p style="text-align: center;">Carregando...</p>'; // Mensagem de carregamento
+
+    let query = db.collection("places").where("category", "==", category);
+
+    if (cityFilter !== 'todas') {
+      query = query.where("city", "==", cityFilter);
+    }
+
+    try {
+      const querySnapshot = await query.get();
+      placesListContainer.innerHTML = ''; // Limpa a mensagem de carregamento
+      if (querySnapshot.empty) {
+        placesListContainer.innerHTML = '<p style="text-align: center;">Nenhum hotel encontrado.</p>';
+        return;
+      }
+
+      querySnapshot.forEach((doc) => {
+        const place = doc.data();
+        const placeId = doc.id; // Obter o ID do documento
+        const placeHtml = `
+          <div class="place-card" data-city="${place.city}">
+            <img src="${place.imageUrl || 'img/placeholder.jpg'}" alt="${place.name}" class="place-img" />
+            <div class="place-name">${place.name}</div>
+            <div class="info"><strong>Horário:</strong> ${place.hours || 'N/A'}</div>
+            <div class="info"><strong>Telefone:</strong> ${place.phone || 'N/A'}</div>
+            <div class="info"><strong>Avaliação:</strong> ⭐${place.rating || 'N/A'}</div>
+            <div class="buttons">
+              <a href="tel:+55${place.phone?.replace(/\D/g,'') || ''}" class="btn">Ligar</a>
+              <a href="${place.mapLink || '#'}" class="btn" target="_blank" rel="noopener noreferrer">Ver Rota</a>
+              <a href="avaliar.html?local=${encodeURIComponent(place.name)}&placeId=${placeId}" class="btn">Avaliar</a>
+            </div>
+          </div>
+        `;
+        placesListContainer.insertAdjacentHTML('beforeend', placeHtml);
+      });
+    } catch (error) {
+      console.error("Erro ao carregar locais:", error);
+      placesListContainer.innerHTML = '<p style="text-align: center;">Erro ao carregar hotéis. Tente novamente.</p>';
+    }
+  }
+
+  // Carregar hotéis ao carregar a página (padrão: todos)
+  document.addEventListener('DOMContentLoaded', () => {
+    loadPlaces('hotel', 'todas'); // Carrega todos os hotéis por padrão
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>O que fazer no Guará</title>
+  <style>
+    :root {
+      --bg-yellow: #9e8807;
+      --red-primary: #d62828;
+      --orange-secondary: #f77f00;
+      --blue-accent: #0077cc;
+      --text-dark: #333;
+      --white-card: #fff;
+      --shadow-light: rgba(0,0,0,0.1);
+      --shadow-medium: rgba(0,0,0,0.15);
+      --shadow-strong: rgba(0,0,0,0.2);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-yellow);
+      color: var(--text-dark);
+      line-height: 1.6;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: linear-gradient(90deg, var(--red-primary), var(--orange-secondary));
+      color: white;
+      padding: 15px 20px;
+      box-shadow: 0 3px 6px var(--shadow-medium);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.5rem;
+      z-index: 1000;
+    }
+
+    .filter-container {
+      margin-top: 80px;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+      background-color: var(--white-card);
+      box-shadow: 0 2px 5px var(--shadow-light);
+      border-bottom-left-radius: 15px;
+      border-bottom-right-radius: 15px;
+    }
+
+    #filterToggle {
+      width: 38px;
+      height: 38px;
+      cursor: pointer;
+      fill: var(--red-primary);
+      transition: transform 0.2s ease;
+    }
+
+    #filterToggle:active {
+      transform: scale(0.9);
+    }
+
+    #filterOptions {
+      display: none;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding-top: 10px;
+      border-top: 1px solid #eee;
+    }
+
+    .filter button {
+      background-color: var(--red-primary);
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      flex-grow: 1;
+      min-width: 100px;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .filter button:hover, .filter button:focus {
+      background-color: var(--orange-secondary);
+      transform: translateY(-2px);
+    }
+
+    main {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 25px;
+      padding: 20px 15px 100px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 500px;
+      background: var(--white-card);
+      border-radius: 15px;
+      box-shadow: 0 6px 18px var(--shadow-medium);
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:active {
+      transform: scale(0.98);
+      box-shadow: 0 3px 10px var(--shadow-light);
+    }
+
+    .card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      display: block;
+      cursor: pointer;
+    }
+
+    .card-content {
+      padding: 18px;
+    }
+
+    .card-content h3 {
+      margin: 0 0 6px;
+      font-size: 1.3rem;
+      color: var(--red-primary);
+    }
+
+    .card-content p {
+      margin: 4px 0;
+      font-size: 0.9rem;
+      color: var(--text-dark);
+    }
+
+    /* Descrição - inicialmente escondida */
+    .description {
+      font-style: italic;
+      font-size: 0.9rem;
+      color: #555;
+      margin-top: 6px;
+      display: none;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .actions a {
+      background-color: var(--orange-secondary);
+      color: white;
+      padding: 10px 18px;
+      text-decoration: none;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      flex-grow: 1;
+      text-align: center;
+    }
+
+    .actions a:hover {
+      background-color: #c75c00;
+      transform: translateY(-2px);
+    }
+
+    .actions a.btn-avaliar {
+      background-color: var(--blue-accent);
+    }
+
+    .actions a.btn-avaliar:hover {
+      background-color: #005fa3;
+    }
+
+    .btn-voltar {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: var(--red-primary);
+      color: white;
+      font-weight: 700;
+      font-size: 1.05rem;
+      padding: 12px 30px;
+      border-radius: 30px;
+      text-decoration: none;
+      box-shadow: 0 5px 15px var(--shadow-strong);
+      z-index: 1001;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .btn-voltar:active {
+      transform: translateX(-50%) scale(0.95);
+      background-color: #a32020;
+    }
+
+    @media (max-width: 400px) {
+      header {
+        font-size: 1.3rem;
+        padding: 12px 15px;
+      }
+      .filter-container {
+        margin-top: 70px;
+        padding: 10px;
+        gap: 10px;
+      }
+      #filterToggle {
+        width: 30px;
+        height: 30px;
+      }
+      .filter button {
+        padding: 8px 15px;
+        font-size: 0.85rem;
+        min-width: unset;
+        flex-basis: calc(50% - 10px);
+      }
+      .card img {
+        height: 160px;
+      }
+      .card-content {
+        padding: 15px;
+      }
+      .card-content h3 {
+        font-size: 1.1rem;
+      }
+      .card-content p {
+        font-size: 0.8rem;
+      }
+      .actions {
+        flex-direction: column;
+        gap: 8px;
+      }
+      .actions a {
+        font-size: 0.8rem;
+        padding: 10px 15px;
+      }
+      .btn-voltar {
+        font-size: 0.95rem;
+        padding: 10px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>Guará - O que fazer</header>
+
+  <div class="filter-container">
+    <svg id="filterToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <path d="M3 4h18v2l-7 8v6l-4-2v-4L3 6V4z"/>
+    </svg>
+    <div class="filter" id="filterOptions">
+      <button onclick="filter('todos')">Todos</button>
+      <button onclick="filter('restaurante')">Restaurantes</button>
+      <button onclick="filter('lazer')">Lazer</button>
+      <button onclick="filter('hotel')">Hotéis</button>
+      <button onclick="filter('cinema')">Cinema</button>
+      <button onclick="filter('teatro')">Teatro</button>
+      <button onclick="filter('musica')">Música</button>
+      <button onclick="filter('esportes')">Esportes</button>
+    </div>
+  </div>
+
+  <main>
+    <div class="card restaurante">
+      <img src="img/restaurante_guara.jpg" alt="Restaurante Sabor Guará" data-description="Restaurante com pratos típicos regionais e ambiente acolhedor."/>
+      <div class="card-content">
+        <h3>Restaurante Sabor Guará</h3>
+        <p class="description"></p>
+        <p>⭐ 4.4 • Seg - Dom: 12h às 22h</p>
+        <div class="actions">
+          <a href="tel:61888880001">Ligar</a>
+          <a href="https://maps.google.com?q=Restaurante+Sabor+Guará" target="_blank">Rota</a>
+          <a href="avaliar.html?local=Restaurante+Sabor+Guará" class="btn-avaliar">Avaliar</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card lazer">
+      <img src="img/parque_guara.webp" alt="Parque Central Guará" data-description="Parque com área verde ampla, ideal para caminhadas e lazer em família."/>
+      <div class="card-content">
+        <h3>Parque Central Guará</h3>
+        <p class="description"></p>
+        <p>⭐ 4.7 • Todos os dias: 6h às 19h</p>
+        <div class="actions">
+          <a href="tel:61877770002">Ligar</a>
+          <a href="https://maps.google.com?q=Parque+Central+Guará" target="_blank">Rota</a>
+          <a href="avaliar.html?local=Parque+Central+Guará" class="btn-avaliar">Avaliar</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card hotel">
+      <img src="img/hotel_guara.webp" alt="Hotel Estrela do Guará" data-description="Hotel confortável com ótima localização e serviços de qualidade."/>
+      <div class="card-content">
+        <h3>Hotel Estrela do Guará</h3>
+        <p class="description"></p>
+        <p>⭐ 4.8 • Check-in: 15h / Check-out: 11h</p>
+        <div class="actions">
+          <a href="tel:61866660003">Ligar</a>
+          <a href="https://maps.google.com?q=Hotel+Estrela+do+Guará" target="_blank">Rota</a>
+          <a href="avaliar.html?local=Hotel+Estrela+do+Guará" class="btn-avaliar">Avaliar</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card teatro">
+      <img src="img/teatro_guara.jpg" alt="Teatro Guará" data-description="Espaço cultural com programação variada de teatro e eventos musicais."/>
+      <div class="card-content">
+        <h3>Teatro Guará</h3>
+        <p class="description"></p>
+        <p>⭐ 4.6 • Quartas a domingos: 19h às 23h</p>
+        <div class="actions">
+          <a href="tel:61855550004">Ligar</a>
+          <a href="https://maps.google.com?q=Teatro+Guará" target="_blank">Rota</a>
+          <a href="avaliar.html?local=Teatro+Guará" class="btn-avaliar">Avaliar</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <a href="categorias.html" class="btn-voltar">Voltar</a>
+
+  <script>
+    // Toggle filtro
+    const filterToggle = document.getElementById('filterToggle');
+    const filterOptions = document.getElementById('filterOptions');
+    filterToggle.addEventListener('click', () => {
+      filterOptions.style.display = filterOptions.style.display === 'flex' ? 'none' : 'flex';
+    });
+
+    // Filtrar cards por categoria
+    function filter(category) {
+      const cards = document.querySelectorAll('main .card');
+      if (category === 'todos') {
+        cards.forEach(card => card.style.display = 'block');
+      } else {
+        cards.forEach(card => {
+          card.style.display = card.classList.contains(category) ? 'block' : 'none';
+        });
+      }
+    }
+
+    // Mostrar/ocultar descrição abaixo do título ao clicar na imagem
+    const cards = document.querySelectorAll('.card');
+    cards.forEach(card => {
+      const img = card.querySelector('img');
+      const desc = card.querySelector('.description');
+      img.addEventListener('click', () => {
+        if (desc.style.display === 'block') {
+          desc.style.display = 'none';
+          desc.textContent = '';
+        } else {
+          desc.textContent = img.dataset.description || 'Sem descrição disponível.';
+          desc.style.display = 'block';
+        }
+      });
+    });
+  </script>
+</body>
+</html>
